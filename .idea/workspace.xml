@@ -46,7 +46,6 @@
       <change beforePath="$PROJECT_DIR$/Models/Model.php" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Model.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/view_connexion_client.php" beforeDir="false" afterPath="$PROJECT_DIR$/Views/view_connexion_client.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/view_connexion_coiffeur.php" beforeDir="false" afterPath="$PROJECT_DIR$/Views/view_connexion_coiffeur.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/view_entete.php" beforeDir="false" afterPath="$PROJECT_DIR$/Views/view_entete.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/view_inscription_client.php" beforeDir="false" afterPath="$PROJECT_DIR$/Views/view_inscription_client.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/view_inscription_coiffeur.php" beforeDir="false" afterPath="$PROJECT_DIR$/Views/view_inscription_coiffeur.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/view_pieds.php" beforeDir="false" afterPath="$PROJECT_DIR$/Views/view_pieds.php" afterDir="false" />
@@ -189,7 +188,7 @@
       <workItem from="1582897351401" duration="445000" />
       <workItem from="1582989696545" duration="1092000" />
       <workItem from="1583009705623" duration="1046000" />
-      <workItem from="1583064427671" duration="36000" />
+      <workItem from="1583064427671" duration="588000" />
     </task>
     <servers />
   </component>
