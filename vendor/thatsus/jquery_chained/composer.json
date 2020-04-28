@@ -1,9 +1,0 @@
-{
-    "name": "thatsus/jquery_chained",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/thatsus/jquery_chained.git"
-        }
-    ]
-}
