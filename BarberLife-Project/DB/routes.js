@@ -1,5 +1,16 @@
-import express from 'express'
-import mysql from 'mysql'
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql'); 
+const url = require('url');
+
+
+
+const app = express();
+
+app.use(bodyParser.json({type:'application/json'}));
+app.use(bodyParser.urlencoded({extended:true}));
+
 
 const connection = mysql.createConnection({
     host:'localhost',
@@ -8,53 +19,49 @@ const connection = mysql.createConnection({
     database:'BarberLife'
 });
 
-const app = express();
-
-export function TestConnection(inputId,inputMdp){
-    connection.getConnection(function (err, connection) {
-        connection.query("SELECT * FROM utilisateur_user WHERE mail_user="+inputId+"AND password_user="+inputMdp,function (error, results, fields){
-
-            if(results != null){
-                console.log("cool")
-            }
-            else{
-                console.log("PAS COOL")
-            }
-        })
-    })
-        
-    
-}
+var server = app.listen(4545,function(){
+    var host = server.address().address
+    var port = server.address().port
+});
 
 connection.connect(function(error){
-    if(error){
-        console.log("erreur");
+    if(error)console.log(error);
+    else console.log("connected");
+})
+
+
+app.post('/connexion',function(req,res){
+    var username = req.body.firstParam;
+    var password = req.body.secondParam;
+    connection.query("SELECT * FROM utilisateur_user WHERE mail_user= ? AND password_user= ? ",[username,password],function(error,rows,fields){
+      if(rows.length > 0){
+          console.log('existe');
+          res.redirect(url.format({
+              pathname:"/home",
+              query:{
+                  "connexion":true,
+                  "user":username
+              }
+          }));
+      }
+      else{
+          console.log("existe pas");
+          return res.send('Email ou mot de passe incorrect');  
+        }
+      res.end();
+    });
+    console.log(username + " " + password);
+});
+
+app.get('/home',function(req,res){
+    var passed = req.query.connexion;
+    var user = req.query.user;
+    if(passed){
+        console.log(user);
+        res.send('Welcome back, ' + user + ' !');
     }
     else{
-        console.log("cool");
+        res.send('Veuillez vous connecter pour voir cette page');
     }
-    
-})
-
-connection.query("SELECT * FROM categorie_cat",function(error,results,fields){
-    console.log(results)
-})
-
-
-
-// A voir plus tard 
-
-/*app.get('/categorie_cat',function(err,connection){
-   
-    /*connection.getConnection(function(err,connection){
-        connection.query('SELECT * FROM categorie_cat',function(error,results,fields){
-            if(error)throw error;
-            res.send(results)
-        })    
-        
-    })
-})*/
-
-/*app.listen(3000,() => {
-    console.log('Go to http://localhost/3000/categorie_cat this is the date');
-});*/
+    res.end();
+});

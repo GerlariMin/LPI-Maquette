@@ -2,10 +2,9 @@ import React from 'react'
 import {View,StyleSheet,Text,TextInput,Button,TouchableOpacity,SafeAreaView} from 'react-native'
 // Sert pour mettre la ligne de délimitation
 import Divider from 'react-native-divider'
-// Sert a avoir un champs mot de passe visible
-import Password from 'react-native-hide-show-password-input'
-// Sert pour verifier les informations de compte
-//import {TestConnection} from '../DB/routes'
+
+
+
 
 // Vue afficher pour la page de connexion
 class Connexion extends React.Component{
@@ -13,6 +12,9 @@ class Connexion extends React.Component{
         super(props)
         this.inputId = ""
         this.inputMdp = ""
+        this.state = {
+            data:[]
+        }
     }
     getInputId(text){
         this.inputId = text      
@@ -20,18 +22,29 @@ class Connexion extends React.Component{
     getInputMdp(text){
         this.inputMdp = text  
     }
+    
+    fetchConnexion =   async()=>{
+        const response = await fetch('http://192.168.0.15:4545/connexion',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify({
+                firstParam: this.inputId,
+                secondParam: this.inputMdp,
+            }),
+        })
+        //const users = await response.json();
+        //console.log(users);
+    } 
     getConnexion(){
-        if(this.inputId.length > 0 || this.inputMdp.length > 0){
-           if(TestConnection(this.inputId,this.inputMdp)){
-               alert('connexion');
-           }
-           else{
-            alert("erreur");
-           }
-          
+        if(this.inputId.length > 0 && this.inputMdp.length > 0){
+
+            this.fetchConnexion();
         }
-        alert("vide");
-        
+        else{
+            alert("Les champs ne sont pas tous rempli");
+        }   
     }
 
     render(){
