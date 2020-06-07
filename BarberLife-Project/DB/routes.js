@@ -1,10 +1,7 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql'); 
 const url = require('url');
-
-
 
 const app = express();
 
@@ -33,35 +30,31 @@ connection.connect(function(error){
 app.post('/connexion',function(req,res){
     var username = req.body.firstParam;
     var password = req.body.secondParam;
-    connection.query("SELECT * FROM utilisateur_user WHERE mail_user= ? AND password_user= ? ",[username,password],function(error,rows,fields){
-      if(rows.length > 0){
-          console.log('existe');
-          res.redirect(url.format({
-              pathname:"/home",
-              query:{
-                  "connexion":true,
-                  "user":username
+    if(username && password){
+        connection.query("SELECT * FROM utilisateur_user WHERE mail_user= ? AND password_user= ? ",[username,password],function(error,rows,fields){
+            if(rows.length > 0){
+                console.log('existe');
+                return res.send({sucess:1,data:rows[0].id_user});
+            }
+            else{
+                console.log("existe pas");
+                return res.send({sucess:2});  
               }
-          }));
-      }
-      else{
-          console.log("existe pas");
-          return res.send('Email ou mot de passe incorrect');  
-        }
-      res.end();
-    });
-    console.log(username + " " + password);
-});
-
-app.get('/home',function(req,res){
-    var passed = req.query.connexion;
-    var user = req.query.user;
-    if(passed){
-        console.log(user);
-        res.send('Welcome back, ' + user + ' !');
+            
+          });
+          console.log(username + " " + password);
     }
     else{
-        res.send('Veuillez vous connecter pour voir cette page');
+        res.send({sucess:3});
     }
-    res.end();
+    
+});
+
+app.post('/home',function(req,res){
+    var idUser = req.body.firstParam;
+    console.log(idUser);
+    connection.query("select * from utilisateur_user where id_user = ?",[idUser],function(error,rows,fields){
+        return res.send(rows); 
+    })
+   
 });

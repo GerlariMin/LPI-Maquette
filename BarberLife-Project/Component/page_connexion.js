@@ -13,7 +13,8 @@ class Connexion extends React.Component{
         this.inputId = ""
         this.inputMdp = ""
         this.state = {
-            data:[]
+            data:[],
+            IdUser:""
         }
     }
     getInputId(text){
@@ -34,17 +35,39 @@ class Connexion extends React.Component{
                 secondParam: this.inputMdp,
             }),
         })
-        //const users = await response.json();
-        //console.log(users);
-    } 
-    getConnexion(){
-        if(this.inputId.length > 0 && this.inputMdp.length > 0){
-
-            this.fetchConnexion();
+        const users = await response.json();
+        switch(users.sucess){
+            case 1:
+                this.setState({
+                    IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
+                })
+                this.fetchHome();   
+            break;
+            case 2:
+                alert("Mauvais identifiant ou mots de passe");
+            break;
+            case 3:
+                alert("Veuillez remplir tous les champs");
+            break;
+ 
         }
-        else{
-            alert("Les champs ne sont pas tous rempli");
-        }   
+    } 
+    fetchHome = async()=>{
+        const response = await fetch('http://192.168.0.15:4545/home',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify({
+                firstParam: this.state.IdUser
+            }),
+        })
+        const users = await response.json();
+        //console.log(users);
+    }
+    getConnexion(){
+       
+        this.fetchConnexion(); 
     }
 
     render(){
@@ -65,7 +88,7 @@ class Connexion extends React.Component{
                     <Divider orientation="center">OU</Divider>
                     <TouchableOpacity style={styles.headerInscrip}>
                         <Text style={styles.inscripText}>
-                            <Text>Vous n'avez pas de compte ?</Text>    
+                            <Text>Vous n'avez pas de compte ? </Text>    
                             <Text style={styles.inscripButton}>
                                 Inscrivez-vous 
                             </Text>
