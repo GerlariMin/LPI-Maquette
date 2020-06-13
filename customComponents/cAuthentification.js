@@ -102,7 +102,7 @@ export default function cAuthentification({navigation})
               }
               //loading={this.state.loading}
               //onPress={handleChange}
-              onPress={goBack}
+              onPress={goTo}
               title=" Connexion"
               type='solid'
             />
