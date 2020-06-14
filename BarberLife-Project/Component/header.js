@@ -28,15 +28,7 @@ class HeaderCustom extends React.Component
   {
     return(
       <Header
-        //leftComponent={{ icon: 'menu', color: '#fff' }}
-        leftComponent={
-          <Icon
-            name='bars'
-            type='font-awesome'
-            color='#f50'
-            onPress= {() => this.openNavigator()} 
-          />
-        }
+        leftComponent={{ icon: 'menu', color: '#fff' }}
         centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
         rightComponent={<AvatarCustom/>}//{{icon: 'home', color: '#fff' }}
         containerStyle={{
