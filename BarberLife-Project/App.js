@@ -1,17 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Connexion from './Component/page_connexion'
+
+import Navigation from './Navigation/Navigation'
+
 export default function App() {
   return (
-    <Connexion/>
+    <Navigation/>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
