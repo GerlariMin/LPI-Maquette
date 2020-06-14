@@ -5,6 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 
+//https://docs.expo.io/versions/v37.0.0/sdk/location/
+import * as Location from 'expo-location';
+
 //import AvatarCustom from './avatar'
 //import HeaderCustom from './header';
 import FooterCustom from './footer';
@@ -14,7 +17,7 @@ const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr
 
 // Vue afficher pour la page de connexion
 class Home extends React.Component{
-  
+
     constructor(props){
         super(props)
         this.inputId = ""
@@ -22,6 +25,10 @@ class Home extends React.Component{
         this.state = {
             data:[],
             IdUser:""
+        }
+        this.state=
+        {
+          lieu: "en cours de localisation..."
         }
     }
 
@@ -41,6 +48,34 @@ class Home extends React.Component{
         this.props.navigation.openDrawer();
     }
 
+    setLocation(param)
+    {
+      console.log("SET- START");
+      console.log("setloc: "+param);
+      this.lieu=param;
+    }
+    //https://docs.expo.io/versions/v37.0.0/sdk/location/
+    useEffect()
+    {
+      console.log("START");
+      (async () => {
+        console.log("ASYNC- START");
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+        }
+        console.log("ASYNC- STATUS = "+status);
+        let location = await Location.getCurrentPositionAsync({});
+        console.log("Lieu: "+location);
+        this.setLocation(location);
+        this.lieu=location;
+        this.setState({lieu: JSON.stringify(this.lieu)})
+        console.log("this.lieu: "+JSON.stringify(this.lieu)+ " => "+this.state.lieu);
+        console.log("ASYNC- END");
+      })();
+      console.log("END");
+    }
+
     render()
     {
         return(
@@ -53,7 +88,7 @@ class Home extends React.Component{
                         type='font-awesome'
                         color='#f50'
                         size= '26'
-                        onPress= {() => this.openNavigator()} 
+                        onPress= {() => this.openNavigator()}
                     />
                     }
                     centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
@@ -74,18 +109,35 @@ class Home extends React.Component{
                 />
                 <Divider style={{ backgroundColor: 'white' }} />
                 <SearchBarCustom />
-        
+
                 <View style={styles.container}>
-        
-                <Card 
+
+                <Card
                     title="ACCUEIL"
                     image={require('../Images/BarberLife-logo-Brown.png')}
                     containerStyle={{ borderRadius: '25px', opacity: 0.98, height: '95%' }}
                 >
-                    
+
                     <Button 
+                      onPress={() => this.useEffect()}
+                      title={` Me localiser`}
+                      icon=
+                      {
+                        <Icon
+                          name="road"
+                          size={15}
+                          color="white"
+                        />
+                      }
+                    />
+
+                    <Text>
+                      lieu: {this.state.lieu}
+                    </Text>
+
+                    <Button
                         onPress={() => this.goToConnexion()}
-                        title={` Se connecter`} 
+                        title={` Se connecter`}
                         icon=
                         {
                         <Icon
@@ -95,11 +147,11 @@ class Home extends React.Component{
                         />
                         }
                     />
-        
+
                 </Card>
-                
+
                 </View>
-        
+
                 <FooterCustom/>
             </ImageBackground>
         )
