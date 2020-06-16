@@ -9,6 +9,9 @@ import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button, Card, Divider, Input } from 'react-native-elements';
 
+//https://docs.expo.io/versions/v37.0.0/sdk/apple-authentication/
+import * as AppleAuthentication from 'expo-apple-authentication';
+
 import HeaderCustom from './cHeader';
 import FooterCustom from './cFooter';
 import SearchBarCustom from './cSearchBar';
@@ -88,7 +91,7 @@ export default function cAuthentification({navigation})
               > Inscrivez-vous </Text>
             </View>
 
-            <View>
+            <View style={styles.space}>
             
             <Button
               buttonStyle={{bottom: 0}}
@@ -106,6 +109,35 @@ export default function cAuthentification({navigation})
               title=" Connexion"
               type='solid'
             />
+
+            </View>
+
+            <View style={styles.horizontalCenter}>
+
+              <AppleAuthentication.AppleAuthenticationButton
+                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                cornerRadius={5}
+                style={{ width: 200, height: 44 }}
+                onPress={async () => {
+                  try {
+                    const credential = await AppleAuthentication.signInAsync({
+                      requestedScopes: [
+                        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                      ],
+                    });
+                    // signed in
+                  } catch (e) {
+                    if (e.code === 'ERR_CANCELED') {
+                      // handle that the user canceled the sign-in flow
+                    } else {
+                      // handle other errors
+                    }
+                  }
+                }}
+              />
+
             </View>
 
           </Card>
@@ -129,6 +161,12 @@ const styles = StyleSheet.create(
   center:
   {
     textAlign: 'center'
+  },
+  horizontalCenter:
+  {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   image:
   {

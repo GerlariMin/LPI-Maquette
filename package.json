@@ -8,11 +8,16 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/drawer": "^5.8.2",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.5.1",
     "expo": "~37.0.3",
+    "expo-apple-authentication": "~2.1.0",
+    "expo-image-picker": "~8.1.0",
+    "expo-localization": "~8.1.0",
+    "expo-location": "~8.1.0",
     "http": "0.0.1-security",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",

@@ -4,17 +4,22 @@ import { NavigationContainer } from "@react-navigation/native";
 //import { createStackNavigator } from "@react-navigation/stack";
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerActions } from '@react-navigation/native';
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 
 import Connexion from "../customComponents/cAuthentification";
 import Home from '../customComponents/cHome';
 import Inscription from '../customComponents/cInscription';
+import Profil from '../customComponents/cProfil';
 
 //const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 /* lien utile pour l'interface 
   https://reactnavigation.org/docs/handling-safe-area
+
+  example de melange des differents navigator
+  https://www.reactnativeschool.com/complex-navigation-example-with-react-navigation
 */
 export default function Navigation() {
   return (
@@ -25,6 +30,7 @@ export default function Navigation() {
           <Drawer.Screen name="Home" component={Home} />
           <Drawer.Screen name="Connexion" component={Connexion} />
           <Drawer.Screen name="Inscription" component={Inscription} />
+          <Drawer.Screen name="Profil" component={Profil} />
         </Drawer.Navigator>
       </NavigationContainer>
     
