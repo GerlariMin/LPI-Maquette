@@ -21,7 +21,8 @@ const Drawer = createDrawerNavigator();
   example de melange des differents navigator
   https://www.reactnativeschool.com/complex-navigation-example-with-react-navigation
 */
-export default function Navigation() {
+export default function Navigation() 
+{
   return (
     
       
@@ -36,7 +37,6 @@ export default function Navigation() {
     
   );
 
-  
 }
 
 /*

@@ -7,7 +7,7 @@ import React from 'react';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button, Card, Divider, Input } from 'react-native-elements';
+import { Avatar, Button, Card, Divider, Header, Input } from 'react-native-elements';
 
 //https://docs.expo.io/versions/v37.0.0/sdk/apple-authentication/
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -15,26 +15,82 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import HeaderCustom from './cHeader';
 import FooterCustom from './cFooter';
 import SearchBarCustom from './cSearchBar';
+import { render } from 'react-dom';
+
+const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
 /*
   INPUT:
   https://react-native-elements.github.io/react-native-elements/docs/input.html
 */
-export default function cAuthentification({navigation})
+export default class cAuthentification extends React.Component
 {
 
-  const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
+  constructor(props){
+    super(props);
+    
+    this.state={
+      lieu: "en cours de localisation..."
+    }
+  }
 
-  const goTo = () => navigation.navigate("Home");
+  goTo()
+  {
+    this.props.navigation.navigate("Home");
+  }
 
-  const goToInscription = () => navigation.navigate("Inscription");
+  goToProfil()
+  {
+    this.props.navigation.navigate("Profil");
+  }
 
-  const goBack = () => navigation.goBack();
+  openNavigator()
+  {
+      this.props.navigation.openDrawer();
+  }
+
+  goToInscription() 
+  {
+    this.props.navigation.navigate("Inscription");
+  }
+
+  goBack()
+  {
+    this.props.navigation.goBack();
+  }
   
+  render()
+  {
     return(
 
       <ImageBackground source={image} style={styles.image}>
-        <HeaderCustom/>
+        <Header
+          //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
+          leftComponent={
+          <Icon
+              name='bars'
+              type='font-awesome'
+              color='#f50'
+              size= {26}
+              onPress= {() => this.openNavigator()}
+          />
+          }
+          centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
+          //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
+          rightComponent={
+              <Avatar
+                  rounded
+                  title="OFF"
+                  overlayContainerStyle={{backgroundColor: 'grey'}}
+                  //showAccessory
+                  onPress={() => this.goToProfil()}
+              />
+          }
+          containerStyle={{
+          backgroundColor: 'black',
+          justifyContent: 'space-around',
+          }}
+      />
         <Divider style={{ backgroundColor: 'white' }} />
         <SearchBarCustom/>
 
@@ -87,7 +143,7 @@ export default function cAuthentification({navigation})
             <Text
               accessibilityRole='link'
               style={[styles.center, styles.link]}
-              onPress={goToInscription}
+              onPress={() => this.goToInscription()}
               > Inscrivez-vous </Text>
             </View>
 
@@ -105,7 +161,7 @@ export default function cAuthentification({navigation})
               }
               //loading={this.state.loading}
               //onPress={handleChange}
-              onPress={goTo}
+              onPress={() => this.goTo()}
               title=" Connexion"
               type='solid'
             />
@@ -147,7 +203,7 @@ export default function cAuthentification({navigation})
         <FooterCustom/>
       </ImageBackground>
     );
-  
+  }
 }
 
 const styles = StyleSheet.create(

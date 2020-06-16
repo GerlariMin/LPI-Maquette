@@ -7,56 +7,115 @@ import React from 'react';
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button, ButtonGroup, Card, CheckBox, Divider, Input } from 'react-native-elements';
+import { Avatar, Button, ButtonGroup, Card, CheckBox, Divider, Header, Input } from 'react-native-elements';
 
 import HeaderCustom from './cHeader';
 import FooterCustom from './cFooter';
 import SearchBarCustom from './cSearchBar';
 
+
+const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
+
+/*
+    ButtonGroup:
+    https://react-native-elements.github.io/react-native-elements/docs/button_group.html
+  */
+ const component1 = () => 
+  <CheckBox
+    center
+    title='Client'
+    checkedIcon='dot-circle-o'
+    uncheckedIcon='circle-o'
+    checked={true}//{this.state.checked}
+  />
+const component2 = () => 
+  <CheckBox
+    center
+    title='Coiffeur'
+    checkedIcon='dot-circle-o'
+    uncheckedIcon='circle-o'
+    //checked={this.state.checked}
+  />
+
+const buttons = [{ element: component1 }, { element: component2 }]
+
 /*
   INPUT:
   https://react-native-elements.github.io/react-native-elements/docs/input.html
 */
-export default function cInscription({navigation})
+export default class cInscription extends React.Component
 {
 
-  const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
+  constructor(props)
+  {
+    super(props);
+    this.lieu=null;
+    this.state=
+    {
+      imageProfil: '../images/avatar.png'
+    }
+  }
 
   /*
     Functions navigation
   */
-  const goTo = () => navigation.navigate("Home");
+  goTo()
+  {
+    navigation.navigate("Home");
+  }
 
-  const goToConnexion = () => navigation.navigate("Connexion");
+  goToConnexion()
+  {
+    navigation.navigate("Connexion");
+  }
 
-  const goBack = () => navigation.goBack();
+  goBack() 
+  {
+    navigation.goBack();
+  }
 
+  goToProfil()
+  {
+    this.props.navigation.navigate("Profil");
+  }
 
-  /*
-    ButtonGroup:
-    https://react-native-elements.github.io/react-native-elements/docs/button_group.html
-  */
-  const component1 = () => <CheckBox
-                              center
-                              title='Client'
-                              checkedIcon='dot-circle-o'
-                              uncheckedIcon='circle-o'
-                              checked='true'//{this.state.checked}
-                            />
-  const component2 = () => <CheckBox
-                              center
-                              title='Coiffeur'
-                              checkedIcon='dot-circle-o'
-                              uncheckedIcon='circle-o'
-                              //checked={this.state.checked}
-                            />
-
-  const buttons = [{ element: component1 }, { element: component2 }]
+  openNavigator()
+  {
+      this.props.navigation.openDrawer();
+  }
   
+  render()
+  {
     return(
 
       <ImageBackground source={image} style={styles.image}>
-        <HeaderCustom/>
+        <Header
+          //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
+          leftComponent={
+          <Icon
+              name='bars'
+              type='font-awesome'
+              color='#f50'
+              size= {26}
+              onPress= {() => this.openNavigator()}
+          />
+          }
+          centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
+          //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
+          rightComponent={
+              <Avatar
+                  rounded
+                  title="OFF"
+                  overlayContainerStyle={{backgroundColor: 'grey'}}
+                  //showAccessory
+                  onPress={() => this.goToProfil()}
+              />
+          }
+          containerStyle={{
+          backgroundColor: 'black',
+          justifyContent: 'space-around',
+          }}
+      />
         <Divider style={{ backgroundColor: 'white' }} />
         <SearchBarCustom/>
 
@@ -75,7 +134,7 @@ export default function cInscription({navigation})
             <Text
               accessibilityRole='link'
               style={[styles.center, styles.link]}
-              onPress={goToConnexion}
+              onPress={() => this.goToConnexion()}
               > Connectez-vous </Text>
             </View>
 
@@ -286,7 +345,7 @@ export default function cInscription({navigation})
               }
               //loading={this.state.loading}
               //onPress={handleChange}
-              onPress={goBack}
+              onPress={() => this.goBack()}
               title=" Connexion"
               type='solid'
             />
@@ -300,6 +359,7 @@ export default function cInscription({navigation})
         <FooterCustom/>
       </ImageBackground>
     );
+  }
   
 }
 

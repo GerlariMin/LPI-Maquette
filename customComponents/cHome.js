@@ -113,7 +113,7 @@ export default class cHome extends React.Component
               name='bars'
               type='font-awesome'
               color='#f50'
-              size= '26'
+              size= {26}
               onPress= {() => this.openNavigator()}
           />
           }
@@ -132,7 +132,7 @@ export default class cHome extends React.Component
           backgroundColor: 'black',
           justifyContent: 'space-around',
           }}
-      />
+        />
         <Divider style={{ backgroundColor: 'white' }} />
         <SearchBarCustom/>
 
