@@ -27,8 +27,8 @@ export default function Navigation()
     
       
       <NavigationContainer theme={DarkTheme}>
-        <Drawer.Navigator initialRouteName="Home">
-          <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Navigator initialRouteName="Accueil">
+          <Drawer.Screen name="Accueil" component={Home} />
           <Drawer.Screen name="Connexion" component={Connexion} />
           <Drawer.Screen name="Inscription" component={Inscription} />
           <Drawer.Screen name="Profil" component={Profil} />
