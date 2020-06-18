@@ -2481,6 +2481,13 @@ expo-location@~8.1.0:
   dependencies:
     invariant "^2.2.4"
 
+expo-payments-stripe@~8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-payments-stripe/-/expo-payments-stripe-8.1.0.tgz#a331f4b62c51165e072f18b81595ae2a607305d9"
+  integrity sha512-JyAZEFgcTw+/JTI7wVnXzSbBCE96mt1yfKmLEK9bpW/qFXJccQF1soRPNiN4D7jRzIrMyE4cnj4aS22rlu/2Xw==
+  dependencies:
+    prop-types "^15.6.0"
+
 expo-permissions@~8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-8.1.0.tgz#a7f2ee91ba76ce3a467e7b10adaa9ca5201b226f"
@@ -4542,6 +4549,11 @@ react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
   integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
+
+react-native-maps@0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.26.1.tgz#6ec316259b38d259c8974448d894bd7a23101da4"
+  integrity sha512-p4VTB8YB5ZmOmDRCUpoHZkm05amZwhIo04AJMBbB9+JAR2PNNfpo0vceoWX0Mag4wnePkdzPomeWMplr/wimTg==
 
 react-native-ratings@^7.2.0:
   version "7.2.0"

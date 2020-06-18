@@ -59,19 +59,19 @@ export default class cInscription extends React.Component
   /*
     Functions navigation
   */
-  goTo()
-  {
-    navigation.navigate("Home");
-  }
+ goTo()
+ {
+   this.props.navigation.navigate("Accueil");
+ }
 
   goToConnexion()
   {
-    navigation.navigate("Connexion");
+    this.props.navigation.navigate("Connexion");
   }
 
   goBack() 
   {
-    navigation.goBack();
+    this.props.navigation.goBack();
   }
 
   goToProfil()
@@ -345,8 +345,8 @@ export default class cInscription extends React.Component
               }
               //loading={this.state.loading}
               //onPress={handleChange}
-              onPress={() => this.goBack()}
-              title=" Connexion"
+              onPress={() => this.goTo()}
+              title=" Inscription"
               type='solid'
             />
             </View>

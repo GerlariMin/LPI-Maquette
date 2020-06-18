@@ -36,7 +36,7 @@ export default class cAuthentification extends React.Component
 
   goTo()
   {
-    this.props.navigation.navigate("Home");
+    this.props.navigation.navigate("Accueil");
   }
 
   goToProfil()

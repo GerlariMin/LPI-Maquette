@@ -86,6 +86,11 @@ export default class cHome extends React.Component
     this.props.navigation.navigate("Connexion");
   }
 
+  goToMap()
+  {
+    this.props.navigation.navigate("Carte");
+  }
+
   goToProfil()
   {
     this.props.navigation.navigate("Profil");
@@ -144,6 +149,7 @@ export default class cHome extends React.Component
           >
               
               <Button 
+                style={styles.space}
                 onPress={() => this.useEffect()} 
                 title={` Me localiser`} 
                 icon=
@@ -156,11 +162,26 @@ export default class cHome extends React.Component
                 }
               />
 
-              <Text>
+              <Text style={styles.space}>
                 lieu: {this.state.lieu}
               </Text>
 
               <Button 
+                style={styles.space}
+                onPress={() => this.goToMap()} 
+                title={` Me localiser sur une carte`} 
+                icon=
+                {
+                  <Icon
+                    name="map-signs"
+                    size={15}
+                    color="white"
+                  />
+                }
+              />
+
+              <Button 
+                style={styles.space}
                 onPress={() => this.goTo()} 
                 title={` Se connecter`} 
                 icon=
@@ -204,6 +225,11 @@ const styles = StyleSheet.create(
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center"
+  },
+  space:
+  {
+    marginTop: 10,
+    marginBottom: 10
   }
 });
 

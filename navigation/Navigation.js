@@ -11,6 +11,7 @@ import Connexion from "../customComponents/cAuthentification";
 import Home from '../customComponents/cHome';
 import Inscription from '../customComponents/cInscription';
 import Profil from '../customComponents/cProfil';
+import Map from '../customComponents/cMap';
 
 //const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -29,6 +30,7 @@ export default function Navigation()
       <NavigationContainer theme={DarkTheme}>
         <Drawer.Navigator initialRouteName="Accueil">
           <Drawer.Screen name="Accueil" component={Home} />
+          <Drawer.Screen name="Carte" component={Map} />
           <Drawer.Screen name="Connexion" component={Connexion} />
           <Drawer.Screen name="Inscription" component={Inscription} />
           <Drawer.Screen name="Profil" component={Profil} />
