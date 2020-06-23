@@ -5,6 +5,7 @@ import React from 'react';
   https://react-native-elements.github.io/react-native-elements/docs/getting_started.html
 */
 import { Avatar } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 /*
   AVATAR:
@@ -12,6 +13,19 @@ import { Avatar } from 'react-native-elements';
 */
 class cHeader extends React.Component
 {
+
+  constructor(props)
+  {
+      super(props)
+      this.navigation = useNavigation();
+  }
+
+  goToBack()
+  {
+      this.navigation.goBack();
+      
+  }
+
   render()
   {
     // Standard Avatar with accessory
@@ -21,6 +35,7 @@ class cHeader extends React.Component
         title="MM"
         overlayContainerStyle={{backgroundColor: 'brown'}}
         showAccessory
+        onPress={() => this.goBack()}
       />
     )
   }

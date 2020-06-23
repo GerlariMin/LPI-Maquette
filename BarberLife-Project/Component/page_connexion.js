@@ -4,7 +4,7 @@ import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input,} from 'react-native-elements';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { Button, Card, Divider } from 'react-native-elements';
+import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 
 import HeaderCustom from './header';
 import FooterCustom from './footer';
@@ -13,38 +13,55 @@ import SearchBarCustom from './searchbar';
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
 // Vue afficher pour la page de connexion
-class Connexion extends React.Component{
+class Connexion extends React.Component
+{
   
     //Constructeur
-    constructor(props){
+    constructor(props)
+    {
         super(props)
         this.inputId = ""
         this.inputMdp = ""
-        this.state = {
-            data:[],
-            IdUser:""
+        this.state = 
+        {
+          title:"OFF",
+          avatarColor: "red",
+          data:[],
+          IdUser:""
         }
     }
 
     //fonctions du navigator (pour changer de page)
-    goToInscription(){
+    goToInscription()
+    {
       this.props.navigation.navigate("Inscription");
     }
 
-    goToHome(){
-      this.props.navigation.navigate("Home");
+    goToHome()
+    {
+      this.props.navigation.navigate("Accueil");
+    }
+
+    openNavigator()
+    {
+        this.props.navigation.openDrawer();
     }
 
     //fonctions BDD
-    getInputId(text){
+    getInputId(text)
+    {
         this.inputId = text      
     }
-    getInputMdp(text){
+    getInputMdp(text)
+    {
         this.inputMdp = text  
     }
     
-    fetchConnexion =   async()=>{
-        const response = await fetch('http://192.168.0.15:4545/connexion',{
+    fetchConnexion =   async()=>
+    {
+        //192.169.0.xx => xx correspond au numéro machine de l'IP sur laquelle se lance EXPO
+        const response = await fetch('http://192.168.0.32:4545/connexion',
+          {
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
@@ -53,28 +70,37 @@ class Connexion extends React.Component{
                 firstParam: this.inputId,
                 secondParam: this.inputMdp,
             }),
-        })
+          })
+
         const users = await response.json();
-        switch(users.sucess){
+
+        switch(users.sucess)
+        {
             case 1:
-                this.setState({
-                    IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
-                })
-                this.fetchHome();   
-            break;
+              this.setState(
+                {
+                  IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
+                }
+              )
+              this.fetchHome();   
+              this.setState({title: "ON", avatarColor: "green"});
+              break;
             case 2:
-                alert("Mauvais identifiant ou mots de passe");
-            break;
+              alert("Mauvais identifiant ou mots de passe");
+              break;
             case 3:
-                alert("Veuillez remplir tous les champs");
-            break;
- 
+              alert("Veuillez remplir tous les champs");
+              break;
         }
     } 
-    fetchHome = async()=>{
-        const response = await fetch('http://192.168.0.15:4545/home',{
+
+    fetchHome = async()=>
+    {
+        const response = await fetch('http://192.168.0.32:4545/home',
+        {
             method:'POST',
-            headers:{
+            headers:
+            {
                 'Content-Type':'application/json',
             },
             body: JSON.stringify({
@@ -82,10 +108,11 @@ class Connexion extends React.Component{
             }),
         })
         const users = await response.json();
-        console.log("user: "+users);
+        console.log("user: "+JSON.stringify(users));
         
     }
-    getConnexion(){
+    getConnexion()
+    {
         this.fetchConnexion(); 
         this.goToHome();
     }
@@ -93,9 +120,35 @@ class Connexion extends React.Component{
     render(){
         return(
           <ImageBackground source={image} style={styles.image}>
-        <HeaderCustom/>
-        <Divider style={{ backgroundColor: 'white' }} />
-        <SearchBarCustom />
+            <Header
+                    //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
+                    leftComponent={
+                    <Icon
+                        name='bars'
+                        type='font-awesome'
+                        color='#f50'
+                        size= '26'
+                        onPress= {() => this.openNavigator()}
+                    />
+                    }
+                    centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
+                    //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
+                    rightComponent={
+                        <Avatar
+                            rounded
+                            title={this.state.title}
+                            overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
+                            //showAccessory
+                            onPress={() => this.goToConnexion()}
+                        />
+                    }
+                    containerStyle={{
+                    backgroundColor: 'black',
+                    justifyContent: 'space-around',
+                    }}
+            />
+            <Divider style={{ backgroundColor: 'white' }} />
+            <SearchBarCustom />
 
         <View style={styles.container}>
             <Card

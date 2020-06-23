@@ -5,7 +5,7 @@ import React from 'react'
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button, ButtonGroup, Card, CheckBox, Divider, Input } from 'react-native-elements';
+import { Avatar, Button, ButtonGroup, Card, CheckBox, Divider, Header, Input } from 'react-native-elements';
 
 
 import HeaderCustom from './header';
@@ -45,25 +45,37 @@ class Inscription extends React.Component{
         this.inputId = ""
         this.inputMdp = ""
         this.state = {
+            title: "OFF",
+            avatarColor: "red",
             data:[],
             IdUser:""
         }
     }
 
     //foncitons Navigator
-    goToConnexion(){
+    goToConnexion()
+    {
         this.props.navigation.navigate("Connexion");
     }
 
-    goToHome(){
+    goToHome()
+    {
         this.props.navigation.navigate("Home");
+    }
+
+    openNavigator()
+    {
+        this.props.navigation.openDrawer();
     }
     
     //fonctions BDD
-    getInputId(text){
+    getInputId(text)
+    {
         this.inputId = text      
     }
-    getInputMdp(text){
+
+    getInputMdp(text)
+    {
         this.inputMdp = text  
     }
     
@@ -95,6 +107,7 @@ class Inscription extends React.Component{
  
         }
     } 
+
     fetchHome = async()=>{
         const response = await fetch('http://192.168.0.15:4545/home',{
             method:'POST',
@@ -108,7 +121,9 @@ class Inscription extends React.Component{
         const users = await response.json();
         
     }
-    getConnexion(){
+
+    getConnexion()
+    {
         this.fetchConnexion(); 
     }
 
@@ -117,7 +132,33 @@ class Inscription extends React.Component{
     {
         return(
           <ImageBackground source={image} style={styles.image}>
-            <HeaderCustom/>
+            <Header
+                    //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
+                    leftComponent={
+                    <Icon
+                        name='bars'
+                        type='font-awesome'
+                        color='#f50'
+                        size= '26'
+                        onPress= {() => this.openNavigator()}
+                    />
+                    }
+                    centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
+                    //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
+                    rightComponent={
+                        <Avatar
+                            rounded
+                            title={this.state.title}
+                            overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
+                            //showAccessory
+                            onPress={() => this.goToConnexion()}
+                        />
+                    }
+                    containerStyle={{
+                    backgroundColor: 'black',
+                    justifyContent: 'space-around',
+                    }}
+            />
             <Divider style={{ backgroundColor: 'white' }} />
             <SearchBarCustom />
 

@@ -16,20 +16,21 @@ import SearchBarCustom from './searchbar';
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
 // Vue afficher pour la page de connexion
-class Home extends React.Component{
+class Home extends React.Component
+{
 
-    constructor(props){
+    constructor(props)
+    {
         super(props)
         this.inputId = ""
         this.inputMdp = ""
-        this.state = {
-            data:[],
-            IdUser:""
-        }
-        this.state=
+        this.state = 
         {
-          lieu: "en cours de localisation..."
+            data:[],
+            IdUser:"",
+            lieu: "en cours de localisation..."
         }
+        global.MyVar = this.navigation;
     }
 
     //foncitons Navigator
@@ -40,7 +41,7 @@ class Home extends React.Component{
 
     goToHome()
     {
-        this.props.navigation.navigate("Home");
+        this.props.navigation.navigate("Accueil");
     }
 
     openNavigator()
@@ -75,6 +76,11 @@ class Home extends React.Component{
       })();
       console.log("END");
     }
+    
+    showSTATE()
+    {
+      console.log("state: " +JSON.stringify(this.state));
+    }
 
     render()
     {
@@ -100,6 +106,7 @@ class Home extends React.Component{
                             overlayContainerStyle={{backgroundColor: 'grey'}}
                             //showAccessory
                             onPress={() => this.goToConnexion()}
+                            props={this.props}
                         />
                     }
                     containerStyle={{
@@ -134,6 +141,19 @@ class Home extends React.Component{
                     <Text>
                       lieu: {this.state.lieu}
                     </Text>
+
+                    <Button
+                        onPress={() => this.showSTATE()}
+                        title={` State`}
+                        icon=
+                        {
+                        <Icon
+                            name="arrow-right"
+                            size={15}
+                            color="white"
+                        />
+                        }
+                    />
 
                     <Button
                         onPress={() => this.goToConnexion()}

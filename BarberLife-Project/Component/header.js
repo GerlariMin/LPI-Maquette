@@ -30,7 +30,7 @@ class HeaderCustom extends React.Component
       <Header
         leftComponent={{ icon: 'menu', color: '#fff' }}
         centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
-        rightComponent={<AvatarCustom/>}//{{icon: 'home', color: '#fff' }}
+        rightComponent={<AvatarCustom props={this.props}/>}//{{icon: 'home', color: '#fff' }}
         containerStyle={{
           backgroundColor: 'black',
           justifyContent: 'space-around',
