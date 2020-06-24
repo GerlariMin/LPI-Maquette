@@ -11,6 +11,7 @@ import Connexion from "../Component/page_connexion";
 import Home from "../Component/page_accueil";
 import Inscription from "../Component/page_inscription";
 import Profil from "../Component/page_profil";
+import Commande from "../Component/page_commande";
 
 //const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -26,6 +27,7 @@ export default function Navigation()
       <NavigationContainer theme={DarkTheme}>
         <Drawer.Navigator initialRouteName="Accueil">
           <Drawer.Screen name="Accueil" component={Home} />
+          <Drawer.Screen name="Commande" component={Commande} />
           <Drawer.Screen name="Connexion" component={Connexion} />
           <Drawer.Screen name="Inscription" component={Inscription} />
           <Drawer.Screen name="Profil" component={Profil} />

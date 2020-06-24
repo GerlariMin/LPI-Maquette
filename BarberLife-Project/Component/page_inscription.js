@@ -12,28 +12,6 @@ import HeaderCustom from './header';
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
-/*
-    ButtonGroup:
-    https://react-native-elements.github.io/react-native-elements/docs/button_group.html
-  */
- const component1 = () => 
-    <CheckBox
-        center
-        title='Client'
-        checkedIcon='dot-circle-o'
-        uncheckedIcon='circle-o'
-        checked={true}//{this.state.checked}
-    />
-const component2 = () => <CheckBox
- center
- title='Coiffeur'
- checkedIcon='dot-circle-o'
- uncheckedIcon='circle-o'
- //checked={this.state.checked}
-/>
-
-const checkbox = [{ element: component1 }, { element: component2 }]
-
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
 // Vue afficher pour la page de connexion
@@ -44,9 +22,14 @@ class Inscription extends React.Component{
         super(props)
         this.inputId = ""
         this.inputMdp = ""
-        this.state = {
+        this.state = 
+        {
             title: "OFF",
             avatarColor: "red",
+            client: false,
+            coiffeur: false,
+            //typeUser vaut -1 par défaut, 0 si coiffeur, 1 si client
+            typeUser: -1,
             data:[],
             IdUser:""
         }
@@ -127,6 +110,87 @@ class Inscription extends React.Component{
         this.fetchConnexion(); 
     }
 
+    setClient()
+    {
+        //si l'autre checkbox n'est pas coché
+        if(this.state.coiffeur == false)
+        {
+            //si le checbox client est activé, on le met à false pour le décoché puis on met -1 à typeUser
+            if(this.state.client == true)
+            {
+                this.setState({client: false});
+                this.setState({typeUser: -1});
+            } 
+            //sinon on le coche et on met typeUser à 1
+            else
+            {
+                this.setState({client: true});
+                this.setState({typeUser: 1});
+            }
+        }
+        //sinon on décoche l'autre checkbox et on met la valeur typeUSer à 1 pour le client
+        else
+        {
+            this.setState({coiffeur: false});
+            this.setState({client: true});
+            this.setState({typeUser: 1});
+        }
+        console.log("type user: "+this.state.typeUser);
+    }
+
+    setCoiffeur()
+    {
+        //si l'autre checkbox n'est pas coché
+        if(this.state.client == false)
+        {
+            //si le checbox coiffeur est activé, on le met à false pour le décoché puis on met -1 à typeUser
+            if(this.state.coiffeur == true)
+            {
+                this.setState({coiffeur: false});
+                this.setState({typeUser: -1});
+            } 
+            //sinon on le coche et on met typeUser à 0
+            else
+            {
+                this.setState({coiffeur: true});
+                this.setState({typeUser: 0});
+            }
+        }
+        //sinon on décoche l'autre checkbox et on met la valeur typeUSer à 0 pour le coiffeur
+        else
+        {
+            this.setState({client: false});
+            this.setState({coiffeur: true});
+            this.setState({typeUser: 0});
+        }
+        console.log("type user: "+this.state.typeUser);
+    }
+
+    /*
+    ButtonGroup:
+    https://react-native-elements.github.io/react-native-elements/docs/button_group.html
+  */
+    component1 = () => 
+    <CheckBox
+        center
+        title='Client'
+        checkedIcon='dot-circle-o'
+        uncheckedIcon='circle-o'
+        checked={this.state.client}
+        onPress={() => this.setClient()}
+    />
+    component2 = () => 
+    <CheckBox
+        center
+        title='Coiffeur'
+        checkedIcon='dot-circle-o'
+        uncheckedIcon='circle-o'
+        checked={this.state.coiffeur}
+        onPress={() => this.setCoiffeur()}
+    />
+
+    checkbox = [{ element: this.component1 }, { element: this.component2 }]
+
     //Affichage
     render()
     {
@@ -193,7 +257,7 @@ class Inscription extends React.Component{
                         <ButtonGroup
                             //onPress={this.updateIndex}
                             //selectedIndex={selectedIndex}
-                            buttons={checkbox}
+                            buttons={this.checkbox}
                             containerStyle={{height: 100}} 
                         />
 

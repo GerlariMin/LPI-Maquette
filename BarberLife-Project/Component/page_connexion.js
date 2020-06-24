@@ -31,6 +31,11 @@ class Connexion extends React.Component
         }
     }
 
+    goToConnexion()
+    {
+        this.props.navigation.navigate("Connexion");
+    }
+
     //fonctions du navigator (pour changer de page)
     goToInscription()
     {
@@ -40,6 +45,24 @@ class Connexion extends React.Component
     goToHome()
     {
       this.props.navigation.navigate("Accueil");
+    }
+
+    goToProfil()
+    {
+        this.props.navigation.navigate("Profil");
+    }
+
+    //Si on clique
+    goTo()
+    {
+      if(this.state.IdUser=="")
+      {
+        this.goToConnexion();
+      }
+      else
+      {
+        this.goToProfil();
+      }
     }
 
     openNavigator()
@@ -121,31 +144,31 @@ class Connexion extends React.Component
         return(
           <ImageBackground source={image} style={styles.image}>
             <Header
-                    //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
-                    leftComponent={
-                    <Icon
-                        name='bars'
-                        type='font-awesome'
-                        color='#f50'
-                        size= '26'
-                        onPress= {() => this.openNavigator()}
-                    />
-                    }
-                    centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
-                    //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
-                    rightComponent={
-                        <Avatar
-                            rounded
-                            title={this.state.title}
-                            overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
-                            //showAccessory
-                            onPress={() => this.goToConnexion()}
-                        />
-                    }
-                    containerStyle={{
-                    backgroundColor: 'black',
-                    justifyContent: 'space-around',
-                    }}
+              //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
+              leftComponent={
+              <Icon
+                  name='bars'
+                  type='font-awesome'
+                  color='#f50'
+                  size= '26'
+                  onPress= {() => this.openNavigator()}
+              />
+              }
+              centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
+              //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
+              rightComponent={
+                  <Avatar
+                      rounded
+                      title={this.state.title}
+                      overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
+                      //showAccessory
+                      onPress={() => this.goTo()}
+                  />
+              }
+              containerStyle={{
+              backgroundColor: 'black',
+              justifyContent: 'space-around',
+              }}
             />
             <Divider style={{ backgroundColor: 'white' }} />
             <SearchBarCustom />

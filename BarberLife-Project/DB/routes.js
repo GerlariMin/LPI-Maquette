@@ -58,3 +58,18 @@ app.post('/home',function(req,res){
     })
    
 });
+
+app.post('/searchBarber',function(req, res){
+    connection.query("select * from utilisateur_user where typeProfil_user = 0",function(error,rows,fields)
+    {
+        if(rows.length > 0)
+        {
+            console.log('existe');
+        }
+        else
+        {
+            console.log("existe pas");
+        }
+        return res.send(rows);  
+    })   
+});
