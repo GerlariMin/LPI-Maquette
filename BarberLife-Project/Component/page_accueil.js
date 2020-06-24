@@ -125,48 +125,22 @@ class Home extends React.Component
                     containerStyle={{ borderRadius: '25px', opacity: 0.98, height: '95%' }}
                 >
 
-                    <Button 
-                      onPress={() => this.useEffect()}
-                      title={` Me localiser`}
+                  <Text>
+                    Bienvenue sur BarberLife !
+                  </Text>
+
+                  <Button
+                      onPress={() => this.goToConnexion()}
+                      title={` Se connecter`}
                       icon=
                       {
-                        <Icon
-                          name="road"
+                      <Icon
+                          name="arrow-right"
                           size={15}
                           color="white"
-                        />
+                      />
                       }
-                    />
-
-                    <Text>
-                      lieu: {this.state.lieu}
-                    </Text>
-
-                    <Button
-                        onPress={() => this.showSTATE()}
-                        title={` State`}
-                        icon=
-                        {
-                        <Icon
-                            name="arrow-right"
-                            size={15}
-                            color="white"
-                        />
-                        }
-                    />
-
-                    <Button
-                        onPress={() => this.goToConnexion()}
-                        title={` Se connecter`}
-                        icon=
-                        {
-                        <Icon
-                            name="arrow-right"
-                            size={15}
-                            color="white"
-                        />
-                        }
-                    />
+                  />
 
                 </Card>
 
