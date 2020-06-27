@@ -91,14 +91,7 @@ class Connexion extends React.Component
     }
 
     //fonctions BDD
-    getInputId(text)
-    {
-        this.inputId = text      
-    }
-    getInputMdp(text)
-    {
-        this.inputMdp = text  
-    }
+   
     
     fetchConnexion =   async()=>
     {

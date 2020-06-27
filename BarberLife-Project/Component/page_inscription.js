@@ -20,8 +20,18 @@ class Inscription extends React.Component{
     //Constructeur
     constructor(props){
         super(props)
-        this.inputId = ""
+        this.inputUsername = ""
+        this.inputNom = ""
+        this.inputPrenom = ""
+        this.inputDateNaiss = ""
+        this.inputNumRue = ""
+        this.inputNomRue = ""
+        this.inputCP = ""
+        this.inputVille = ""
+        this.inputTel = ""
         this.inputMdp = ""
+        this.inputVerifMdp = ""
+       
         this.state = 
         {
             title: "OFF",
@@ -45,71 +55,87 @@ class Inscription extends React.Component{
     {
         this.props.navigation.navigate("Home");
     }
+    getInputUsername(text){
+        this.inputUsername = text      
+    }
+    getInputNom(text){
+        this.inputNom = text  
+    }
+    getInputPrenom(text){
+        this.inputPrenom = text  
+    }
+    getInputDateNaiss(text){
+        this.inputDateNaiss = text  
+    }
+    getInputNumRue(text){
+        this.inputNumRue = text  
+    }
+    getInputNomRue(text){
+        this.inputNomRue = text  
+    }
+    getInputCP(text){
+        this.inputCP = text  
+    }
+    getInputVille(text){
+        this.inputVille = text  
+    }
+    getInputTel (text){
+        this.inputTel = text
+    }
 
     openNavigator()
     {
         this.props.navigation.openDrawer();
     }
     
-    //fonctions BDD
-    getInputId(text)
-    {
-        this.inputId = text      
-    }
-
     getInputMdp(text)
     {
         this.inputMdp = text  
     }
+    getInputVerifMdp(text){
+        this.inputVerifMdp = text  
+    }
     
-    fetchConnexion =   async()=>{
-        const response = await fetch('http://192.168.0.15:4545/connexion',{
+    fetchInscription =   async()=>{
+        const response = await fetch('http://192.168.0.15:4545/inscription',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
             },
             body: JSON.stringify({
-                firstParam: this.inputId,
-                secondParam: this.inputMdp,
+                mail: this.inputUsername,
+                nom: this.inputNom,
+                prenom: this.inputPrenom,
+                dateNaiss: this.inputDateNaiss,
+                numRue : this.inputNumRue,
+                nomRue : this.inputNomRue,
+                cp : this.inputCP,
+                ville : this.inputVille,
+                tel : this.inputTel,
+                mdp : this.inputMdp,
+                verifMdp : this.inputVerifMdp,
+                typeProfil : this.state.typeUser,
+
             }),
         })
-        const users = await response.json();
-        switch(users.sucess){
+        const inscrip = await response.json();
+        switch(inscrip.sucess){
             case 1:
-                this.setState({
-                    IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
-                })
-                this.fetchHome();   
+                this.goToConnexion();
             break;
             case 2:
-                alert("Mauvais identifiant ou mots de passe");
+                alert("Les mots de passe entrés sont différent");
             break;
             case 3:
                 alert("Veuillez remplir tous les champs");
             break;
+            
  
         }
     } 
-
-    fetchHome = async()=>{
-        const response = await fetch('http://192.168.0.15:4545/home',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: this.state.IdUser
-            }),
-        })
-        const users = await response.json();
-        
+    getInscription(){
+        this.fetchInscription();
     }
-
-    getConnexion()
-    {
-        this.fetchConnexion(); 
-    }
-
     setClient()
     {
         //si l'autre checkbox n'est pas coché
@@ -203,7 +229,7 @@ class Inscription extends React.Component{
                         name='bars'
                         type='font-awesome'
                         color='#f50'
-                        size= {26}
+                        size= '26'
                         onPress= {() => this.openNavigator()}
                     />
                     }
@@ -262,22 +288,6 @@ class Inscription extends React.Component{
                         />
 
                         <Input
-                            label="Nom d'utilisateur"
-                            labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
-                            placeholder="Saisissez votre nom d'utilisateur (login)"
-                            leftIcon=
-                            {
-                                <Icon
-                                    name='user-circle-o'
-                                    size={24}
-                                    color='black'
-                                />
-                            }
-                            errorMessage='ENTER A VALID LOGIN'
-                            errorStyle={{ color: 'red', fontWeight: 'bold' }}
-                        />
-
-                        <Input
                             label='Mail'
                             labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
                             placeholder="Saisissez votre adresse e-mail"
@@ -291,6 +301,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID MAIL ADDRESS'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputUsername(text)}
                         />
 
                         <Input
@@ -307,6 +318,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID MAIL ADDRESS'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputNom(text)}
                         />
 
                         <Input
@@ -323,6 +335,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID MAIL ADDRESS'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputPrenom(text)}
                         />
 
                         <Input
@@ -339,6 +352,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID DATE OF BIRTH'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputDateNaiss(text)}
                         />
 
                         <Divider/>
@@ -357,6 +371,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID STREET NUMBER'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputNumRue(text)}
                         />
 
                         <Input
@@ -373,6 +388,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID STREET NAME'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputNomRue(text)}
                         />
 
                         <Input
@@ -389,6 +405,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID ZIPCODE'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputCP(text)}
                         />
 
                         <Input
@@ -405,6 +422,23 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID CITY'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputVille(text)}
+                        />
+                         <Input
+                            label='Tel'
+                            labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
+                            placeholder="Saisissez votre numéro de téléphone"
+                            leftIcon=
+                            {
+                                <Icon
+                                    name='at'
+                                    size={24}
+                                    color='black'
+                                />
+                            }
+                            errorMessage='ENTER A VALID MAIL ADDRESS'
+                            errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputTel(text)}
                         />
 
                         <Divider/>
@@ -424,6 +458,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER A VALID PASSWORD'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputMdp(text)}
                         />
 
                         <Input
@@ -441,6 +476,7 @@ class Inscription extends React.Component{
                             }
                             errorMessage='ENTER THE SAME PASSWORD'
                             errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                            onChangeText={(text) => this.getInputVerifMdp(text)}
                         />
 
                         </View>
@@ -458,7 +494,7 @@ class Inscription extends React.Component{
                                 />
                             }
                             //loading={this.state.loading}
-                            onPress={() => this.goToHome()}
+                            onPress={() => this.getInscription()}
                             title=" Inscription"
                             type='solid'
                         />

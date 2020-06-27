@@ -86,7 +86,7 @@ class Connexion extends React.Component
     fetchConnexion =   async()=>
     {
         //192.169.0.xx => xx correspond au numéro machine de l'IP sur laquelle se lance EXPO
-        const response = await fetch('http://192.168.0.32:4545/connexion',
+        const response = await fetch('http://192.168.0.15:4545/connexion',
           {
             method:'POST',
             headers:{
@@ -108,10 +108,11 @@ class Connexion extends React.Component
                   IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
                 }
               )
-              this.props.idUser = users.data;
-              console.log("IDUSER: "+this.props.idUser);
-              this.fetchHome();   
+              //this.props.idUser = users.data;
+              //console.log("IDUSER: "+this.props.idUser);
+              //this.fetchHome();   
               this.setState({title: "ON", avatarColor: "green"});
+              this.goToHome();
               break;
             case 2:
               alert("Mauvais identifiant ou mots de passe");
@@ -125,7 +126,7 @@ class Connexion extends React.Component
     fetchHome = async()=>
     {
       console.log("FETCHHOME START");
-        const response = await fetch('http://192.168.0.32:4545/home',
+        const response = await fetch('http://192.168.0.15:4545/home',
         {
             method:'POST',
             headers:
@@ -143,7 +144,7 @@ class Connexion extends React.Component
     getConnexion()
     {
         this.fetchConnexion(); 
-        this.goToHome();
+        
     }
 
     showSTATE()
