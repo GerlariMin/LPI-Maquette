@@ -22,15 +22,15 @@ class Home extends React.Component
     constructor(props)
     {
         super(props)
+        console.log("HOME PROPS: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
         this.inputId = ""
         this.inputMdp = ""
-        this.state = 
+        /*this.state = 
         {
             data:[],
             IdUser:"",
             lieu: "en cours de localisation..."
-        }
-        global.MyVar = this.navigation;
+        }*/        
     }
 
     //foncitons Navigator
@@ -79,11 +79,12 @@ class Home extends React.Component
     
     showSTATE()
     {
-      console.log("state: " +JSON.stringify(this.state));
+      console.log("HOME PROPS: "+JSON.stringify(this.props));
     }
 
     render()
     {
+      this.showSTATE();
         return(
             <ImageBackground source={image} style={styles.image}>
                 <Header
@@ -93,7 +94,7 @@ class Home extends React.Component
                         name='bars'
                         type='font-awesome'
                         color='#f50'
-                        size= '26'
+                        size= {26}
                         onPress= {() => this.openNavigator()}
                     />
                     }
@@ -132,6 +133,19 @@ class Home extends React.Component
                   <Button
                       onPress={() => this.goToConnexion()}
                       title={` Se connecter`}
+                      icon=
+                      {
+                      <Icon
+                          name="arrow-right"
+                          size={15}
+                          color="white"
+                      />
+                      }
+                  />
+
+                  <Button
+                      onPress={() => this.showSTATE()}
+                      title={` Show`}
                       icon=
                       {
                       <Icon

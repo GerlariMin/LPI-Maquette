@@ -203,7 +203,7 @@ class Inscription extends React.Component{
                         name='bars'
                         type='font-awesome'
                         color='#f50'
-                        size= '26'
+                        size= {26}
                         onPress= {() => this.openNavigator()}
                     />
                     }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
 // Sert pour mettre la ligne de délimitation
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,6 +9,7 @@ import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 import HeaderCustom from './header';
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
+import Profil from "../Component/page_profil";
 
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
@@ -20,10 +21,12 @@ class Connexion extends React.Component
     constructor(props)
     {
         super(props)
+        console.log("CONNEXION PROPS: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
         this.inputId = ""
         this.inputMdp = ""
         this.state = 
         {
+          unUser: null,
           title:"OFF",
           avatarColor: "red",
           data:[],
@@ -105,6 +108,8 @@ class Connexion extends React.Component
                   IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
                 }
               )
+              this.props.idUser = users.data;
+              console.log("IDUSER: "+this.props.idUser);
               this.fetchHome();   
               this.setState({title: "ON", avatarColor: "green"});
               break;
@@ -119,6 +124,7 @@ class Connexion extends React.Component
 
     fetchHome = async()=>
     {
+      console.log("FETCHHOME START");
         const response = await fetch('http://192.168.0.32:4545/home',
         {
             method:'POST',
@@ -132,7 +138,7 @@ class Connexion extends React.Component
         })
         const users = await response.json();
         console.log("user: "+JSON.stringify(users));
-        
+        this.setState({user: users});
     }
     getConnexion()
     {
@@ -140,9 +146,16 @@ class Connexion extends React.Component
         this.goToHome();
     }
 
-    render(){
+    showSTATE()
+    {
+      console.log("CONNEXION PROPS: "+JSON.stringify(this.props));
+    }
+
+    render()
+    {
+      this.showSTATE();
         return(
-          <ImageBackground source={image} style={styles.image}>
+            <ImageBackground source={image} style={styles.image}>
             <Header
               //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
               leftComponent={
@@ -150,7 +163,7 @@ class Connexion extends React.Component
                   name='bars'
                   type='font-awesome'
                   color='#f50'
-                  size= '26'
+                  size= {26}
                   onPress= {() => this.openNavigator()}
               />
               }

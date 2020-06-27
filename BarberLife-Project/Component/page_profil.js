@@ -34,8 +34,10 @@ class Connexion extends React.Component
             avatarColor: "red",
             imagePicker: 'https://img.icons8.com/color/1600/avatar.png',
             data:[],
-            IdUser: "t"
+            IdUser: "t",
+            count: 0
         }
+        console.log("PROFIL PROPS: "+ JSON.stringify(this.props));
     }
 
     useEffect()
@@ -181,7 +183,7 @@ class Connexion extends React.Component
                         name='bars'
                         type='font-awesome'
                         color='#f50'
-                        size= '26'
+                        size= {26}
                         onPress= {() => this.openNavigator()}
                     />
                     }

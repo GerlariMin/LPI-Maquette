@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 //import { AppRegistry } from 'react-native';
 //import { createStackNavigator } from "@react-navigation/stack";
@@ -16,23 +16,39 @@ import Commande from "../Component/page_commande";
 //const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+function HomeScreen({navigation}, {idUser}, {data}) 
+{
+  return (
+    <Home navigation={{ navigation }} idUser={{ idUser }} data={{ data }}/>
+  );
+}
+
 /* lien utile pour l'interface 
   https://reactnavigation.org/docs/handling-safe-area
 */
-export default function Navigation() 
+export default class Navigation extends React.Component 
 {
-  return (
-    
+  constructor(props)
+  {
+    super(props)
+    console.log("NAV PROPS: "+ JSON.stringify(this.props) +" "+ this.props.idUser);
+  }
+  
+  render()
+  {
+    return (
       
-      <NavigationContainer theme={DarkTheme}>
-        <Drawer.Navigator initialRouteName="Accueil">
-          <Drawer.Screen name="Accueil" component={Home} />
-          <Drawer.Screen name="Commande" component={Commande} />
-          <Drawer.Screen name="Connexion" component={Connexion} />
-          <Drawer.Screen name="Inscription" component={Inscription} />
-          <Drawer.Screen name="Profil" component={Profil} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    
-  );  
+        
+        <NavigationContainer theme={DarkTheme}>
+          <Drawer.Navigator initialRouteName="Accueil">
+            <Drawer.Screen name="Accueil" component={Home} />
+            <Drawer.Screen name="Commande" component={Commande} />
+            <Drawer.Screen name="Connexion" component={Connexion} />
+            <Drawer.Screen name="Inscription" component={Inscription} />
+            <Drawer.Screen name="Profil" component={Profil} />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      
+    );
+  }  
 }
