@@ -23,6 +23,7 @@ class Home extends React.Component
     {
         super(props)
         console.log("HOME PROPS: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
+        console.log("HOME PROPS: "+JSON.stringify(this.props) +" ==> "+JSON.stringify(this.props.updateIdUser));
         this.inputId = ""
         this.inputMdp = ""
         /*this.state = 
@@ -86,35 +87,34 @@ class Home extends React.Component
     {
       this.showSTATE();
         return(
-            <ImageBackground source={image} style={styles.image}>
-                <Header
-                    //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
-                    leftComponent={
-                    <Icon
-                        name='bars'
-                        type='font-awesome'
-                        color='#f50'
-                        size= {26}
-                        onPress= {() => this.openNavigator()}
-                    />
-                    }
-                    centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
-                    //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
-                    rightComponent={
-                        <Avatar
-                            rounded
-                            title="OFF"
-                            overlayContainerStyle={{backgroundColor: 'grey'}}
-                            //showAccessory
-                            onPress={() => this.goToConnexion()}
-                            props={this.props}
-                        />
-                    }
-                    containerStyle={{
-                    backgroundColor: 'black',
-                    justifyContent: 'space-around',
-                    }}
-                />
+          <ImageBackground source={image} style={styles.image}>
+          <Header
+              //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
+              leftComponent={
+              <Icon
+                  name='bars'
+                  type='font-awesome'
+                  color='#f50'
+                  size= {26}
+                  onPress= {() => this.openNavigator()}
+              />
+              }
+              centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
+              //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
+              rightComponent={
+                  <Avatar
+                      rounded
+                      title="ON"
+                      overlayContainerStyle={{backgroundColor: "green"}}
+                      showAccessory
+                      //onPress={() => this.goToConnexion()}
+                  />
+              }
+              containerStyle={{
+              backgroundColor: 'black',
+              justifyContent: 'space-around',
+              }}
+          />
                 <Divider style={{ backgroundColor: 'white' }} />
                 <SearchBarCustom />
 
@@ -161,7 +161,7 @@ class Home extends React.Component
                 </View>
 
                 <FooterCustom/>
-            </ImageBackground>
+                </ImageBackground>
         )
     }
 }

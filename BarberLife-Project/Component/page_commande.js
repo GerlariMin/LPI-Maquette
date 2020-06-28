@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
 // Sert pour mettre la ligne de délimitation
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,6 +10,7 @@ import { Avatar, Button, Card, Divider, Header, ListItem } from 'react-native-el
 import HeaderCustom from './header';
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
+import Coiffeur from './page_coiffeur';
 
 //https://docs.expo.io/versions/v37.0.0/sdk/imagepicker/
 import * as ImagePicker from 'expo-image-picker';
@@ -27,6 +29,7 @@ export default class Commande extends React.Component
     constructor(props)
     {
         super(props)
+        console.log("COMMANDE PROPS: "+ JSON.stringify(this.props));
         this.inputId = ""
         this.inputMdp = ""
         this.state = 
@@ -50,6 +53,11 @@ export default class Commande extends React.Component
     goToHome()
     {
       this.props.navigation.navigate("Accueil");
+    }
+
+    gotToCoiffeur(id_user)
+    {
+        this.props.navigation.navigate("Coiffeur", {id_user});
     }
 
     openNavigator()
@@ -99,34 +107,6 @@ export default class Commande extends React.Component
         this.setState({coiffeurs: barbers})
     }
 
-    /*
-    ne marche pas encore bug avec le state, utilisation de la constante list pour l'instant
-    renderList()
-    {
-        console.log("start renderList");
-        if(this.state.coiffeurs != null)
-        { 
-            console.log("if renderList");
-            return (
-            <View>
-            {
-                this.state.coiffeurs.map((l, i) => (
-                <ListItem
-                    key={l.id_user}
-                    leftAvatar={{ source: { uri: this.state.imagePicker } }}
-                    title={l.nom_user + l.prenom_user}
-                    //subtitle={l.subtitle}
-                    bottomDivider
-                />
-                ))
-            }
-            </View>);
-        } else
-        console.log("else renderList");
-            return <Text>test</Text>;
-    }
-    */
-
     render()
     {
         return(
@@ -169,6 +149,22 @@ export default class Commande extends React.Component
                 >
 
                 <View>
+                {
+                    //probleme: doit afficher la liste après clic sur le bouton mais bug si on utilise le state 
+                    list.map((l, i) => (
+                    <ListItem
+                        key={l.id_user}
+                        leftAvatar={{ source: { uri: this.state.imagePicker } }}
+                        title={l.nom_user + l.prenom_user}
+                        //subtitle={l.subtitle}
+                        bottomDivider
+                        onPress={() => this.gotToCoiffeur(l.id_user)}
+                    />
+                    ))
+                }
+                </View>
+
+                <View>
                     <Button
                         buttonStyle={{bottom: 0}}
                         icon=
@@ -181,25 +177,11 @@ export default class Commande extends React.Component
                         }
                         loading={this.state.loading}
                         onPress={() => this.fetchAllBarber()}
-                        title=" Recherche des coiffeurs à proximité"
+                        title=" Actualiser la liste des coiffeurs à proximité"
                         type='solid'
                     />
                 </View>
 
-                <View>
-                {
-                    //probleme: doit afficher la liste après clic sur le bouton mais bug si on utilise le state 
-                    list.map((l, i) => (
-                    <ListItem
-                        key={l.id_user}
-                        leftAvatar={{ source: { uri: this.state.imagePicker } }}
-                        title={l.nom_user + l.prenom_user}
-                        //subtitle={l.subtitle}
-                        bottomDivider
-                    />
-                    ))
-                }
-                </View>
         
                 </Card>
             </View>

@@ -97,7 +97,7 @@ class Inscription extends React.Component{
     }
     
     fetchInscription =   async()=>{
-        const response = await fetch('http://192.168.0.15:4545/inscription',{
+        const response = await fetch('http://192.168.0.38:4545/inscription',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json',
