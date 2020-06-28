@@ -102,8 +102,10 @@ app.post('/inscription', function(req,res){
 })
 
 app.post('/searchBarber',function(req, res){
-    connection.query("select * from utilisateur_user where typeProfil_user = 0",function(error,rows,fields)
+    var typeProfil = 0;
+    connection.query("select * from utilisateur_user where typeProfil_user = ?",[typeProfil],function(error,rows,fields)
     {
+       
         if(rows.length > 0)
         {
             console.log('existe');
@@ -114,4 +116,30 @@ app.post('/searchBarber',function(req, res){
         }
         return res.send(rows);  
     })   
+});
+
+app.post('/rdv',function(req, res){
+    var idCoiffeur = req.body.idUser;
+    var idUser = 8;
+    var date1 = Date.now();
+    var date2 = Date.now()+ 1*3600*1000;
+    var dateDeb = new Date(date1),
+    finalDateDeb = dateDeb.toISOString().split('T')[0]+' '+dateDeb.toTimeString().split(' ')[0];
+    var dateFin = new Date(date2),
+    finalDateFin = dateFin.toISOString().split('T')[0]+' '+dateFin.toTimeString().split(' ')[0];
+    var montant = 10;
+    var etatCmd = "En attente de validation";
+    console.log(idCoiffeur,idUser,finalDateDeb,finalDateFin,montant,etatCmd);
+    connection.query("INSERT INTO commande_cmd (id_user,coiffeur_cmd,etat_cmd,montant_cmd,date_debut_cmd,date_fin_cmd) VALUES (?,?,?,?,?,?) ",[idUser,idCoiffeur,etatCmd,montant,dateDeb,dateFin],function(error,rows,fields){
+        if(!error){
+            res.send({sucess:1});
+        }
+        else{
+            res.send({sucess:2});
+        }
+        
+       
+    });
+
+
 });

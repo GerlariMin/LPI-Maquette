@@ -50,6 +50,32 @@ class Home extends React.Component
     {
         this.props.navigation.openDrawer();
     }
+    fetchRdv = async()=>
+    {
+      console.log("FETCHHOME START");
+        const response = await fetch('http://192.168.0.15:4545/rdv',
+        {
+            method:'POST',
+            headers:
+            {
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify({
+                idUser: this.props.route.params.id_user
+            }),
+        })
+        const users = await response.json();
+        switch(users.sucess){
+          case 1 :
+            alert("Commande effectué");
+          break;
+          case 2:
+            alert("Problème lors de la commande");
+          break;
+        }
+       
+        
+    }
 
     render()
     {
@@ -110,7 +136,7 @@ class Home extends React.Component
                     />
 
                   <Button
-                      onPress={() => this.goToConnexion()}
+                      onPress={() => this.fetchRdv()}
                       title={` Prendre rendez-vous `}
                       icon=
                       {

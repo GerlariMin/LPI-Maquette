@@ -11,10 +11,11 @@ import HeaderCustom from './header';
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 import Coiffeur from './page_coiffeur';
-
+import CoiffeurItems from './coiffeurItems'
 //https://docs.expo.io/versions/v37.0.0/sdk/imagepicker/
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
+import { FlatList } from 'react-native-gesture-handler';
 
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
@@ -34,7 +35,7 @@ export default class Commande extends React.Component
         this.inputMdp = ""
         this.state = 
         {
-            coiffeurs: null,
+            coiffeurs: "",
             //OFF et red si pas connecté, ON et green sinon
             title:"OFF",
             avatarColor: "red",
@@ -89,12 +90,12 @@ export default class Commande extends React.Component
     //pendant que la page charge on récupère les données et on modifie le state pour les inputs
     componentWillMount()
     {
-        this.fetchAllBarber();
+        //this.fetchAllBarber();
     }
 
     fetchAllBarber = async()=>
     {
-        const response = await fetch('http://192.168.0.32:4545/searchBarber',
+        const response = await fetch('http://192.168.0.15:4545/searchBarber',
         {
             method:'POST',
             headers:
@@ -105,6 +106,24 @@ export default class Commande extends React.Component
         const barbers = await response.json();
         console.log("BARBERS: "+JSON.stringify(barbers));
         this.setState({coiffeurs: barbers})
+    }
+
+    displayCoiffeur(){
+        if(this.state.coiffeurs != null){
+            return(
+                <FlatList
+
+                data={this.state.coiffeurs}
+                keyExtractor= {(item) => item.id_user.toString()}
+                renderItem= {({item}) => (
+                    <CoiffeurItems
+                        user = {item}
+                        navigation = {this.props.navigation}
+                    />
+                )}
+            />
+            )
+        }
     }
 
     render()
@@ -151,7 +170,7 @@ export default class Commande extends React.Component
                 <View>
                 {
                     //probleme: doit afficher la liste après clic sur le bouton mais bug si on utilise le state 
-                    list.map((l, i) => (
+                   /* list.map((l, i) => (
                     <ListItem
                         key={l.id_user}
                         leftAvatar={{ source: { uri: this.state.imagePicker } }}
@@ -160,8 +179,10 @@ export default class Commande extends React.Component
                         bottomDivider
                         onPress={() => this.gotToCoiffeur(l.id_user)}
                     />
-                    ))
+                    ))*/
+
                 }
+                {this.displayCoiffeur()}
                 </View>
 
                 <View>

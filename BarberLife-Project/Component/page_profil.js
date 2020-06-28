@@ -96,7 +96,7 @@ class Connexion extends React.Component
     fetchConnexion =   async()=>
     {
         //192.169.0.xx => xx correspond au numéro machine de l'IP sur laquelle se lance EXPO
-        const response = await fetch('http://192.168.0.32:4545/connexion',
+        const response = await fetch('http://192.168.0.15:4545/connexion',
           {
             method:'POST',
             headers:{
