@@ -22,8 +22,8 @@ class Home extends React.Component
     constructor(props)
     {
         super(props)
-        console.log("HOME PROPS: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
-        console.log("HOME PROPS: "+JSON.stringify(this.props) +" ==> "+JSON.stringify(this.props.updateIdUser));
+        console.log("HOME PROPS1: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
+        console.log("HOME PROPS2: "+JSON.stringify(this.props) +" ==> "+JSON.stringify(this.props.updateIdUser));
         this.inputId = ""
         this.inputMdp = ""
         /*this.state = 

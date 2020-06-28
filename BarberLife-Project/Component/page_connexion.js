@@ -47,7 +47,7 @@ class Connexion extends React.Component
 
     goToHome()
     {
-      console.log("STATE: "+this.state);
+      console.log("STATE: "+this.state.idUser);
       this.props.navigation.navigate("Accueil", {
         idUser: this.state.IdUser
       });
@@ -94,7 +94,7 @@ class Connexion extends React.Component
     fetchConnexion =   async()=>
     {
         //192.169.0.xx => xx correspond au numéro machine de l'IP sur laquelle se lance EXPO
-        const response = await fetch('http://192.168.0.38:4545/connexion',
+        const response = await fetch('http://192.168.1.87:4545/connexion',
           {
             method:'POST',
             headers:{
@@ -134,7 +134,7 @@ class Connexion extends React.Component
     fetchHome = async()=>
     {
       console.log("FETCHHOME START");
-        const response = await fetch('http://192.168.0.38:4545/home',
+        const response = await fetch('http://192.168.1.87:4545/home',
         {
             method:'POST',
             headers:

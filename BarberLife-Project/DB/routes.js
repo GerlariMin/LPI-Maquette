@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 const connection = mysql.createConnection({
     host:'localhost',
     user:'root',
-    password:'',
+    password:'admin',
     database:'BarberLife'
 });
 
@@ -33,10 +33,9 @@ app.post('/connexion',function(req,res){
     var password = req.body.secondParam;
     if(username && password){
         connection.query("SELECT * FROM utilisateur_user WHERE mail_user= ? ",[username],function(error,rows,fields){
+         
+            if(bcrypt.compareSync(password,rows[0].password_user)){
             
-            //if(bcrypt.compareSync(password,rows[0].password_user)){
-            if(password == rows[0].password_user)
-            {
                 console.log('existe');
                 return res.send({sucess:1,data:rows[0].id_user});
             }
