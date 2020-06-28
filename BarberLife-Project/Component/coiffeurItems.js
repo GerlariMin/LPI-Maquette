@@ -1,16 +1,16 @@
-import React from 'react'
-import {StyleSheet,View,Text,Image,TouchableOpacity} from 'react-native'
-
-class CoiffeurItem extends React.Component{
+import React from 'react';
+import {StyleSheet,View,Text,Image,TouchableOpacity} from 'react-native';
+import { Avatar, ListItem}  from 'react-native-elements';
+export default class CoiffeurItem extends React.Component{
      //Constructeur
      constructor(props)
      {
         super(props)
         
      }
-    gotToCoiffeur(id_user)
+    gotToCoiffeur(user)
     {
-        this.props.navigation.navigate("Coiffeur", {id_user});
+        this.props.navigation.navigate("Coiffeur", {user});
     }
     render(){
 
@@ -20,20 +20,20 @@ class CoiffeurItem extends React.Component{
        
        
         return(
-          
-            <TouchableOpacity  onPress={() => this.gotToCoiffeur(user.id_user)}>
-                
+
                 <View >
-                   
-                    <Text >{user.nom_user}</Text>
-                    <Text >{user.prenom_user}</Text>
+                
+                    <ListItem
+                        key={user.id_user}
+                        leftAvatar={{ source: { uri: 'https://img.icons8.com/color/1600/avatar.png' } }}
+                        title={user.nom_user +" "+ this.props.user.prenom_user}
+                        bottomDivider
+                        onPress={() => this.gotToCoiffeur(user)}
+                    />
                    
                 </View>
-            </TouchableOpacity>
             
         )
     }
 
 }
-
-export default CoiffeurItem

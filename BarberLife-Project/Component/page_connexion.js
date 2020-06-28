@@ -6,10 +6,8 @@ import { Input,} from 'react-native-elements';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 
-import HeaderCustom from './header';
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
-import Profil from "../Component/page_profil";
 
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
@@ -21,22 +19,15 @@ class Connexion extends React.Component
     constructor(props)
     {
         super(props)
-        console.log("CONNEXION PROPS: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
         this.inputId = ""
         this.inputMdp = ""
         this.state = 
         {
-          unUser: null,
           title:"OFF",
           avatarColor: "red",
-          data:[],
-          IdUser:""
+          data: this.props.data,
+          IdUser: this.props.IdUser
         }
-    }
-
-    goToConnexion()
-    {
-        this.props.navigation.navigate("Connexion");
     }
 
     //fonctions du navigator (pour changer de page)
@@ -47,32 +38,26 @@ class Connexion extends React.Component
 
     goToHome()
     {
-      console.log("STATE: "+this.state.idUser);
+      console.log("STATE CONNEXION: "+JSON.stringify(this.state.IdUser));
       this.props.navigation.navigate("Accueil", {
-        idUser: this.state.IdUser
+        IdUser: this.state.IdUser,
+        data: this.state.data
       });
     }
 
     goToProfil()
     {
-        this.props.navigation.navigate("Profil");
-    }
-
-    //Si on clique
-    goTo()
-    {
-      if(this.state.IdUser=="")
+      if(this.state.IdUser=!"")
       {
-        //this.goToConnexion();
-        this.setState({idUser: "test"});
-        console.log("STATE: "+this.state);
-        this.props.navigation.navigate("Accueil", {
-          test: this.state.IdUser
+        this.props.navigation.navigate("Profil", {
+          test: "test",
+          IdUser: this.state.IdUser,
+          data: this.state.data
         });
       }
       else
       {
-        this.goToProfil();
+        alert("Vous devez être connecté pour accéder à cette page")
       }
     }
 
@@ -81,7 +66,9 @@ class Connexion extends React.Component
         this.props.navigation.openDrawer();
     }
 
-    //fonctions BDD
+    /**
+     * RECUPERATION CHAMPS FORMULAIRE 
+     */
     getInputId(text)
     {
         this.inputId = text      
@@ -90,11 +77,15 @@ class Connexion extends React.Component
     {
         this.inputMdp = text  
     }
+
+    /**
+     * FONCTION BDD
+     */
     
     fetchConnexion =   async()=>
     {
         //192.169.0.xx => xx correspond au numéro machine de l'IP sur laquelle se lance EXPO
-        const response = await fetch('http://192.168.0.15:4545/connexion',
+        const response = await fetch('http://192.168.0.32:4545/connexion',
           {
             method:'POST',
             headers:{
@@ -115,11 +106,9 @@ class Connexion extends React.Component
                 {
                   IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
                 }
-              )
-              //this.props.idUser = users.data;
-              //console.log("IDUSER: "+this.props.idUser);
-              //this.fetchHome();   
-              this.setState({title: "ON", avatarColor: "green"});
+              ) 
+              this.setState({IdUser: users.IdUser, data: users.data,title: "ON", avatarColor: "green"});
+              console.log("USERS000: "+JSON.stringify(users));
               this.goToHome();
               break;
             case 2:
@@ -134,7 +123,7 @@ class Connexion extends React.Component
     fetchHome = async()=>
     {
       console.log("FETCHHOME START");
-        const response = await fetch('http://192.168.0.15:4545/home',
+        const response = await fetch('http://192.168.0.32:4545/home',
         {
             method:'POST',
             headers:
@@ -152,7 +141,6 @@ class Connexion extends React.Component
     getConnexion()
     {
         this.fetchConnexion(); 
-        
     }
 
     showSTATE()
@@ -184,7 +172,7 @@ class Connexion extends React.Component
                       title={this.state.title}
                       overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
                       //showAccessory
-                      onPress={() => this.goTo()}
+                      onPress={() => this.goToProfil()}
                   />
               }
               containerStyle={{

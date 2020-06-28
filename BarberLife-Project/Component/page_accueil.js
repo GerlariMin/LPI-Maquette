@@ -1,48 +1,64 @@
-import React from 'react'
-import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
-// Sert pour mettre la ligne de délimitation
+import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 
-//https://docs.expo.io/versions/v37.0.0/sdk/location/
+/**
+ * Import pour la localisation 
+ * source: https://docs.expo.io/versions/v37.0.0/sdk/location/
+ */
 import * as Location from 'expo-location';
 
-//import AvatarCustom from './avatar'
-//import HeaderCustom from './header';
+//Imports des classes personnalisées
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
+//constantes utiles
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
 // Vue afficher pour la page de connexion
-class Home extends React.Component
+export default class Home extends React.Component
 {
 
     constructor(props)
     {
         super(props)
-        console.log("HOME PROPS1: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
-        console.log("HOME PROPS2: "+JSON.stringify(this.props) +" ==> "+JSON.stringify(this.props.updateIdUser));
+        console.log("PROPS HOME: "+ JSON.stringify(this.props))
         this.inputId = ""
         this.inputMdp = ""
-        /*this.state = 
+        this.state = 
         {
-            data:[],
-            IdUser:"",
-            lieu: "en cours de localisation..."
-        }*/        
+            lieu: "en cours de localisation...",
+            title: "OFF",
+            avatarColor: "red",
+            IdUser: "",
+            data: []
+        }     
     }
 
-    //foncitons Navigator
+    /**
+     * FONCTIONS NAVIGATION
+     */
+
     goToConnexion()
     {
         this.props.navigation.navigate("Connexion");
     }
 
-    goToHome()
+    goToProfil()
     {
-        this.props.navigation.navigate("Accueil");
+      if(this.state.IdUser!="")
+      {
+        this.props.navigation.navigate("Profil", 
+        {
+          IdUser: this.state.IdUser,
+          data: this.state.data
+        });
+      }
+      else
+      {
+        alert("Vous devez être connecté pour accéder à cette page")
+      }
     }
 
     openNavigator()
@@ -50,13 +66,47 @@ class Home extends React.Component
         this.props.navigation.openDrawer();
     }
 
-    setLocation(param)
+    displayHome()
     {
-      console.log("SET- START");
-      console.log("setloc: "+param);
-      this.lieu=param;
+      if(typeof this.props.route.params === 'undefined')
+      {
+        return(
+          <View>
+            <Text>
+              Bienvenue sur BarberLife !
+            </Text>
+
+            <Button
+              onPress={() => this.goToConnexion()}
+              title={` Connectez-vous`}
+              icon=
+              {
+                <Icon
+                    name="arrow-right"
+                    size={15}
+                    color="white"
+                />
+              }
+            />
+          </View>
+        )
+      } 
+      else
+      {
+        return(
+          <Text>
+            Vous êtes maintenant connecté !
+            Prenez rendez-vous avec le coiffeur de votre choix en 1 clic!
+          </Text>
+        )
+      }
     }
-    //https://docs.expo.io/versions/v37.0.0/sdk/location/
+
+    /**
+     * FONCTION LOCALISATION
+     * source: https://docs.expo.io/versions/v37.0.0/sdk/location/
+     */
+
     useEffect()
     {
       console.log("START");
@@ -77,116 +127,116 @@ class Home extends React.Component
       })();
       console.log("END");
     }
-    
-    showSTATE()
-    {
-      console.log("HOME PROPS: "+JSON.stringify(this.props));
-    }
 
     render()
     {
-      this.showSTATE();
-        return(
-          <ImageBackground source={image} style={styles.image}>
+      if(typeof this.props.route.params !== 'undefined' && this.state.IdUser=="")
+        {
+          this.setState({
+            IdUser: this.props.route.params.IdUser,
+            data: this.props.route.params.data,
+            title: "ON",
+            avatarColor: "green"
+          })
+        }
+      console.log("PROPS HOME: "+ JSON.stringify(this.props))
+      return(
+        <ImageBackground source={image} style={styles.image}>
           <Header
-              //utilisation du header a la place de headercustom de component/header.js car on ne peut pas ouvrir le menu sinon (a patcher)
-              leftComponent={
-              <Icon
-                  name='bars'
-                  type='font-awesome'
-                  color='#f50'
-                  size= {26}
-                  onPress= {() => this.openNavigator()}
-              />
+              
+              leftComponent=
+              {
+                <Icon
+                    name='bars'
+                    type='font-awesome'
+                    color='#f50'
+                    size= {26}
+                    onPress= {() => this.openNavigator()}
+                />
               }
-              centerComponent={{ text: 'BARBERLIFE', style: { color: '#fff', fontWeight: 'bold' } }}
-              //utilisation du avatar a la place de avatarcustom de component/avatar.js car on ne configurer le onpress sinon (a patcher)
-              rightComponent={
+
+              centerComponent=
+              {
+                { 
+                  text: 'BARBERLIFE', 
+                  style: { color: '#fff', fontWeight: 'bold' } 
+                }
+              }
+              
+              rightComponent=
+              {
                   <Avatar
                       rounded
-                      title="ON"
-                      overlayContainerStyle={{backgroundColor: "green"}}
+                      title={this.state.title}
+                      overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
                       showAccessory
-                      //onPress={() => this.goToConnexion()}
+                      onPress={() => this.goToProfil()}
                   />
               }
-              containerStyle={{
-              backgroundColor: 'black',
-              justifyContent: 'space-around',
-              }}
+              
+              containerStyle=
+              {
+                {
+                  backgroundColor: 'black',
+                  justifyContent: 'space-around',
+                }
+              }
           />
-                <Divider style={{ backgroundColor: 'white' }} />
-                <SearchBarCustom />
 
-                <View style={styles.container}>
+          <Divider style={{ backgroundColor: 'white' }} />
 
-                <Card
-                    title="ACCUEIL"
-                    image={require('../Images/BarberLife-logo-Brown.png')}
-                    containerStyle={{ borderRadius: '25px', opacity: 0.98, height: '95%' }}
-                >
+          <SearchBarCustom />
 
-                  <Text>
-                    Bienvenue sur BarberLife !
-                  </Text>
+          <View style={styles.container}>
 
-                  <Button
-                      onPress={() => this.goToConnexion()}
-                      title={` Se connecter`}
-                      icon=
-                      {
-                      <Icon
-                          name="arrow-right"
-                          size={15}
-                          color="white"
-                      />
-                      }
-                  />
+            <Card
+                title="ACCUEIL"
+                image=
+                {
+                  require('../Images/BarberLife-logo-Brown.png')
+                }
+                containerStyle=
+                {
+                  { 
+                    borderRadius: '25px', 
+                    opacity: 0.98, 
+                    height: '95%' 
+                  }
+                }
+            >
 
-                  <Button
-                      onPress={() => this.showSTATE()}
-                      title={` Show`}
-                      icon=
-                      {
-                      <Icon
-                          name="arrow-right"
-                          size={15}
-                          color="white"
-                      />
-                      }
-                  />
+              {this.displayHome()}
 
-                </Card>
+            </Card>
 
-                </View>
+          </View>
 
-                <FooterCustom/>
-                </ImageBackground>
-        )
+          <FooterCustom/>
+
+      </ImageBackground>
+      )
     }
 }
 
 const styles = StyleSheet.create(
+{
+  container:
     {
-      container:
-        {
-          flex: 1,
-          height: '100%',
-          //backgroundColor: 'gray'
-        },
-      text:
-      {
-        //backgroundColor: 'black',
-        opacity: 1,
-        color: "white",
-        fontWeight: 'bold'
-      },
-      image:
-      {
-        flex: 1,
-        resizeMode: "cover",
-        justifyContent: "center"
-      }
-    });
-
-export default Home
+      flex: 1,
+      height: '100%',
+      //backgroundColor: 'gray'
+    },
+  text:
+  {
+    //backgroundColor: 'black',
+    opacity: 1,
+    color: "white",
+    fontWeight: 'bold'
+  },
+  image:
+  {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  }
+});

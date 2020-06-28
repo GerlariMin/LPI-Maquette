@@ -95,7 +95,7 @@ export default class Commande extends React.Component
 
     fetchAllBarber = async()=>
     {
-        const response = await fetch('http://192.168.0.15:4545/searchBarber',
+        const response = await fetch('http://192.168.0.32:4545/searchBarber',
         {
             method:'POST',
             headers:
@@ -128,6 +128,14 @@ export default class Commande extends React.Component
 
     render()
     {
+        if(typeof this.props.route.params !== 'undefined' && this.state.IdUser=="")
+        {
+          this.setState({
+            IdUser: this.props.route.params.IdUser,
+            data: this.props.route.params.data,
+            title: "ON",
+            avatarColor: "green"
+          })
         return(
           <ImageBackground source={image} style={styles.image}>
             <Header
@@ -210,6 +218,13 @@ export default class Commande extends React.Component
         </ImageBackground>
         )
     }
+    else
+    {
+        alert("Vous devez être connecté(e) pour accéder à cette page!")
+        return null
+    }
+    }
+    
 }
 
 

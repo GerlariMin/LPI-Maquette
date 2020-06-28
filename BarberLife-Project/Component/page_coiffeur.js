@@ -1,9 +1,8 @@
-import React from 'react'
-import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
+import React from 'react';
 // Sert pour mettre la ligne de délimitation
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { Avatar, Button, Card, Divider, Header, Rating } from 'react-native-elements';
+import { ImageBackground, StyleSheet, View } from 'react-native';
+import { Avatar, Button, Card, Divider, Header, Rating, Text } from 'react-native-elements';
 
 //https://docs.expo.io/versions/v37.0.0/sdk/location/
 import * as Location from 'expo-location';
@@ -14,10 +13,10 @@ import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
-const WATER_IMAGE = require('../Images/barber.png');
+const WATER_IMAGE = require('../Images/star.png');
 
 // Vue afficher pour la page de connexion
-class Home extends React.Component
+export default class Coiffeur extends React.Component
 {
 
     constructor(props)
@@ -53,7 +52,7 @@ class Home extends React.Component
     fetchRdv = async()=>
     {
       console.log("FETCHHOME START");
-        const response = await fetch('http://192.168.0.15:4545/rdv',
+        const response = await fetch('http://192.168.0.32:4545/rdv',
         {
             method:'POST',
             headers:
@@ -79,6 +78,7 @@ class Home extends React.Component
 
     render()
     {
+      
         return(
           <ImageBackground source={image} style={styles.image}>
           <Header
@@ -114,14 +114,21 @@ class Home extends React.Component
                 <View style={styles.container}>
 
                 <Card
-                    title={"COIFFEUR " + this.props.idUser}
+                    title={this.props.route.params.user.nom_user + " " + this.props.route.params.user.prenom_user}
                     image={require('../Images/BarberLife-logo-Brown.png')}
                     containerStyle={{ borderRadius: '25px', opacity: 0.98, height: '95%' }}
                 >
 
+                  <Text>                    
+                    Mail: {this.props.route.params.user.mail_user}
+                  </Text>
+
                   <Text>
-                    Information du coiffeur
-                    {JSON.stringify(this.props)}
+                    Téléphone: {this.props.route.params.user.nom_user}
+                  </Text>
+
+                  <Text>
+                    Disponible
                   </Text>
 
                     <Rating
@@ -129,7 +136,7 @@ class Home extends React.Component
                         ratingImage={WATER_IMAGE}
                         ratingColor='#3498db'
                         ratingBackgroundColor='#c8c7c8'
-                        ratingCount={10}
+                        ratingCount={5}
                         imageSize={30}
                         onFinishRating={this.ratingCompleted}
                         style={{ paddingVertical: 10 }}
@@ -180,5 +187,3 @@ const styles = StyleSheet.create(
         justifyContent: "center"
       }
     });
-
-export default Home

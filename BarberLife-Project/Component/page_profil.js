@@ -1,10 +1,8 @@
 import React from 'react'
-import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
 // Sert pour mettre la ligne de délimitation
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input,} from 'react-native-elements';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
+import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Avatar, Button, Card, Divider, Header, Input } from 'react-native-elements';
 
 import HeaderCustom from './header';
 import FooterCustom from './footer';
@@ -18,7 +16,7 @@ const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr
 
 
 // Vue afficher pour la page de connexion
-class Connexion extends React.Component
+export default class Profil extends React.Component
 {
   
     //Constructeur
@@ -90,83 +88,16 @@ class Connexion extends React.Component
         this.props.navigation.openDrawer();
     }
 
-    //fonctions BDD
-   
-    
-    fetchConnexion =   async()=>
-    {
-        //192.169.0.xx => xx correspond au numéro machine de l'IP sur laquelle se lance EXPO
-        const response = await fetch('http://192.168.0.15:4545/connexion',
-          {
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: "m.minbielle@gmail.com",
-                secondParam: "momo",
-            }),
-          })
-
-        const users = await response.json();
-
-        switch(users.sucess)
-        {
-            case 1:
-              this.setState(
-                {
-                  IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
-                }
-              )
-              this.fetchHome();   
-              this.setState({title: "ON", avatarColor: "green"});
-              break;
-            case 2:
-              alert("Mauvais identifiant ou mots de passe");
-              break;
-            case 3:
-              alert("Veuillez remplir tous les champs");
-              break;
-        }
-    } 
-
-    fetchHome = async()=>
-    {
-        const response = await fetch('http://192.168.0.32:4545/home',
-        {
-            method:'POST',
-            headers:
-            {
-                'Content-Type':'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: this.state.IdUser
-            }),
-        })
-        const users = await response.json();
-        console.log("user: "+JSON.stringify(users));
-        
-    }
-
-    getConnexion()
-    {
-        this.fetchConnexion(); 
-        this.goToHome();
-    }
-
-    componentWillMount()
-    {
-        this.fetchConnexion(); 
-    }
-
-    //pendant que la page charge on récupère les données et on modifie le state pour les inputs
-    componentWillMount()
-    {
-        this.fetchConnexion();
-    }
-
     render()
     {
+        /*if(typeof this.props.route.params !== 'undefined' && this.state.IdUser=="")
+        {
+          this.setState({
+            IdUser: this.props.route.params.IdUser,
+            data: this.props.route.params.data,
+            title: "ON",
+            avatarColor: "green"
+          })*/
         return(
           <ImageBackground source={image} style={styles.image}>
             <Header
@@ -199,7 +130,9 @@ class Connexion extends React.Component
             <Divider style={{ backgroundColor: 'white' }} />
             <SearchBarCustom />
 
-        <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
+                
+                <ScrollView >
             <Card
                 title='PROFIL'
                 image={require('../Images/BarberLife-logo-Orange.png')}
@@ -427,10 +360,19 @@ class Connexion extends React.Component
             </View>
     
           </Card>
-          </View>
+          </ScrollView>
+
+          </SafeAreaView>
           <FooterCustom/>
       </ImageBackground>
         )
+    /*}
+    else
+    {
+        alert("Vous devez être connecté(e) pour accéder à cette page!")
+        return null
+    }*/
+        
     }
 }
 
@@ -477,5 +419,3 @@ const styles = StyleSheet.create(
         justifyContent: "center"
     }
 });
-
-export default Connexion

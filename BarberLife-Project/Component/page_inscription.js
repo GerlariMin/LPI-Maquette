@@ -55,6 +55,16 @@ class Inscription extends React.Component{
     {
         this.props.navigation.navigate("Home");
     }
+
+    openNavigator()
+    {
+        this.props.navigation.openDrawer();
+    }
+
+    /**
+     * RECUPERATION CHAMPS FORMULAIRE 
+     */
+
     getInputUsername(text){
         this.inputUsername = text      
     }
@@ -81,13 +91,7 @@ class Inscription extends React.Component{
     }
     getInputTel (text){
         this.inputTel = text
-    }
-
-    openNavigator()
-    {
-        this.props.navigation.openDrawer();
-    }
-    
+    }    
     getInputMdp(text)
     {
         this.inputMdp = text  
@@ -96,10 +100,16 @@ class Inscription extends React.Component{
         this.inputVerifMdp = text  
     }
     
-    fetchInscription =   async()=>{
-        const response = await fetch('http://192.168.0.15:4545/inscription',{
+    /**
+     * FONCTION BDD
+     */
+
+    fetchInscription =   async() =>
+    {
+        const response = await fetch('http://192.168.0.32:4545/inscription',{
             method:'POST',
-            headers:{
+            headers:
+            {
                 'Content-Type':'application/json',
             },
             body: JSON.stringify({
@@ -119,23 +129,32 @@ class Inscription extends React.Component{
             }),
         })
         const inscrip = await response.json();
-        switch(inscrip.sucess){
+        switch(inscrip.sucess)
+        {
             case 1:
+                alert("Votre compte viens d'être créé, veuillez vous connecter pour continuer.")
                 this.goToConnexion();
             break;
             case 2:
-                alert("Les mots de passe entrés sont différent");
+                alert("Les mots de passe entrés sont différent!");
             break;
             case 3:
-                alert("Veuillez remplir tous les champs");
+                alert("Veuillez remplir tous les champs!");
             break;
             
  
         }
     } 
-    getInscription(){
+
+    getInscription()
+    {
         this.fetchInscription();
     }
+
+    /**
+     * RECUPERATION CHECBOX
+     */
+
     setClient()
     {
         //si l'autre checkbox n'est pas coché
@@ -161,7 +180,6 @@ class Inscription extends React.Component{
             this.setState({client: true});
             this.setState({typeUser: 1});
         }
-        console.log("type user: "+this.state.typeUser);
     }
 
     setCoiffeur()
@@ -189,13 +207,12 @@ class Inscription extends React.Component{
             this.setState({coiffeur: true});
             this.setState({typeUser: 0});
         }
-        console.log("type user: "+this.state.typeUser);
     }
 
     /*
-    ButtonGroup:
-    https://react-native-elements.github.io/react-native-elements/docs/button_group.html
-  */
+        ButtonGroup:
+        https://react-native-elements.github.io/react-native-elements/docs/button_group.html
+    */
     component1 = () => 
     <CheckBox
         center
@@ -217,7 +234,6 @@ class Inscription extends React.Component{
 
     checkbox = [{ element: this.component1 }, { element: this.component2 }]
 
-    //Affichage
     render()
     {
         return(
@@ -229,7 +245,7 @@ class Inscription extends React.Component{
                         name='bars'
                         type='font-awesome'
                         color='#f50'
-                        size= '26'
+                        size= {26}
                         onPress= {() => this.openNavigator()}
                     />
                     }

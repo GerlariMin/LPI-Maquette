@@ -9,35 +9,43 @@ const app = express();
 app.use(bodyParser.json({type:'application/json'}));
 app.use(bodyParser.urlencoded({extended:true}));
 
-
-const connection = mysql.createConnection({
+//constante permettant la connexion à la BDD locale
+const connection = mysql.createConnection(
+{
     host:'localhost',
     user:'root',
-    password:'admin',
+    password:'',
     database:'BarberLife'
 });
 
-var server = app.listen(4545,function(){
+//on écoute le port 4545
+var server = app.listen(4545,function()
+{
     var host = server.address().address
     var port = server.address().port
 });
 
-connection.connect(function(error){
+//on vérifie que la connexion soit établie
+connection.connect(function(error)
+{
     if(error)console.log(error);
     else console.log("connected");
 })
 
-
+//récupération d'un utilisateur par rapport à son mail et son mot de passe
 app.post('/connexion',function(req,res){
     var username = req.body.firstParam;
     var password = req.body.secondParam;
-    if(username && password){
-        connection.query("SELECT * FROM utilisateur_user WHERE mail_user= ? ",[username],function(error,rows,fields){
-         
-            if(bcrypt.compareSync(password,rows[0].password_user)){
+    if(username && password)
+    {
+        connection.query("SELECT * FROM utilisateur_user WHERE mail_user= ? ",[username],function(error,rows,fields)
+        {
+            // si le mot de passe saisi correspond au mot de passe crypté en base
+            if(bcrypt.compareSync(password,rows[0].password_user))
+            {
             
                 console.log('existe');
-                return res.send({sucess:1,data:rows[0].id_user});
+                return res.send({sucess:1,IdUser:rows[0].id_user, data:rows[0]});
             }
             else
             {
@@ -54,16 +62,21 @@ app.post('/connexion',function(req,res){
     
 });
 
-app.post('/home',function(req,res){
+//récupération de toutes les données d'un utilisateur par rapport à son id
+app.post('/home',function(req,res)
+{
     var idUser = req.body.firstParam;
     console.log(idUser);
-    connection.query("select * from utilisateur_user where id_user = ?",[idUser],function(error,rows,fields){
+    connection.query("select * from utilisateur_user where id_user = ?",[idUser],function(error,rows,fields)
+    {
         return res.send(rows); 
     })
    
 });
 
-app.post('/inscription', function(req,res){
+//insertion d'un nouvel utilisateur
+app.post('/inscription', function(req,res)
+{
     var mail = req.body.mail;
     var nom = req.body.nom;
     var prenom = req.body.prenom;
@@ -80,45 +93,55 @@ app.post('/inscription', function(req,res){
     
     console.log(mail,nom,prenom,dateNaiss,numRue,nomRue,cp,ville,tel,mdp,verifMdp,typeProfil);
 
-    if(mail && nom && prenom && dateNaiss && numRue && nomRue && cp && ville && tel && mdp && verifMdp){
+    if(mail && nom && prenom && dateNaiss && numRue && nomRue && cp && ville && tel && mdp && verifMdp)
+    {
         
         // Mettre l'adresse complète dans une variable
-        
-        if(mdp == verifMdp){
+        if(mdp == verifMdp)
+        {
             var address = numRue + "" + nomRue + "" + ville + "" + cp;
             var hash = bcrypt.hashSync(mdp, salt);
-            connection.query("INSERT INTO utilisateur_user(id_tk,typeProfil_user,nom_user,prenom_user,dataNaiss_user,mail_user,numero_user,adress_user,password_user) VALUES (?,?,?,?,?,?,?,?,?) ",[idToken,typeProfil,nom,prenom,dateNaiss,mail,tel,address,hash],function(error,rows,fields){
+            connection.query("INSERT INTO utilisateur_user(id_tk,typeProfil_user,nom_user,prenom_user,dataNaiss_user,mail_user,numero_user,adress_user,password_user) VALUES (?,?,?,?,?,?,?,?,?) ",[idToken,typeProfil,nom,prenom,dateNaiss,mail,tel,address,hash],function(error,rows,fields)
+            {
                 res.send({sucess:1});
                 console.log('inscription');
             });  
         }
-        else{
+        else
+        {
+            console.log('mot de passe différent dans les deux champs');
             res.send({sucess:2});
         }             
     }
-    else{
+    else
+    {
+        console.log('toutes les cases ne sont pas remplies');
         res.send({sucess:3});
     }
 })
 
-app.post('/searchBarber',function(req, res){
+//recherche des coiffeurs
+app.post('/searchBarber',function(req, res)
+{
     var typeProfil = 0;
     connection.query("select * from utilisateur_user where typeProfil_user = ?",[typeProfil],function(error,rows,fields)
     {
        
         if(rows.length > 0)
         {
-            console.log('existe');
+            console.log('coiffeurs trouvés');
         }
         else
         {
-            console.log("existe pas");
+            console.log("aucuns coiffeurs");
         }
         return res.send(rows);  
     })   
 });
 
-app.post('/rdv',function(req, res){
+//Prise de rendez-vous
+app.post('/rdv',function(req, res)
+{
     var idCoiffeur = req.body.idUser;
     var idUser = 8;
     var date1 = Date.now();
@@ -130,11 +153,14 @@ app.post('/rdv',function(req, res){
     var montant = 10;
     var etatCmd = "En attente de validation";
     console.log(idCoiffeur,idUser,finalDateDeb,finalDateFin,montant,etatCmd);
-    connection.query("INSERT INTO commande_cmd (id_user,coiffeur_cmd,etat_cmd,montant_cmd,date_debut_cmd,date_fin_cmd) VALUES (?,?,?,?,?,?) ",[idUser,idCoiffeur,etatCmd,montant,dateDeb,dateFin],function(error,rows,fields){
-        if(!error){
+    connection.query("INSERT INTO commande_cmd (id_user,coiffeur_cmd,etat_cmd,montant_cmd,date_debut_cmd,date_fin_cmd) VALUES (?,?,?,?,?,?) ",[idUser,idCoiffeur,etatCmd,montant,dateDeb,dateFin],function(error,rows,fields)
+    {
+        if(!error)
+        {
             res.send({sucess:1});
         }
-        else{
+        else
+        {
             res.send({sucess:2});
         }
         
