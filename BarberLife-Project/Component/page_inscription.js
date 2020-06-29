@@ -1,21 +1,19 @@
 import React from 'react'
-//import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
-// Sert pour mettre la ligne de délimitation
 
+//Imports librairies
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Avatar, Button, ButtonGroup, Card, CheckBox, Divider, Header, Input } from 'react-native-elements';
 
-
-import HeaderCustom from './header';
+// Imports classes personnalisées
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
-// Vue afficher pour la page de connexion
-class Inscription extends React.Component{
+// Vue afficher pour la page d'inscription
+class Inscription extends React.Component
+{
   
     //Constructeur
     constructor(props){
@@ -56,6 +54,22 @@ class Inscription extends React.Component{
         this.props.navigation.navigate("Home");
     }
 
+    goToProfil()
+    {
+      if(this.state.IdUser!="")
+      {
+        this.props.navigation.navigate("Profil", {
+          test: "test",
+          IdUser: this.state.IdUser,
+          data: this.state.data
+        });
+      }
+      else
+      {
+        alert("Vous devez être connecté pour accéder à cette page")
+      }
+    }
+
     openNavigator()
     {
         this.props.navigation.openDrawer();
@@ -65,31 +79,40 @@ class Inscription extends React.Component{
      * RECUPERATION CHAMPS FORMULAIRE 
      */
 
-    getInputUsername(text){
+    getInputUsername(text)
+    {
         this.inputUsername = text      
     }
-    getInputNom(text){
+    getInputNom(text)
+    {
         this.inputNom = text  
     }
-    getInputPrenom(text){
+    getInputPrenom(text)
+    {
         this.inputPrenom = text  
     }
-    getInputDateNaiss(text){
+    getInputDateNaiss(text)
+    {
         this.inputDateNaiss = text  
     }
-    getInputNumRue(text){
+    getInputNumRue(text)
+    {
         this.inputNumRue = text  
     }
-    getInputNomRue(text){
+    getInputNomRue(text)
+    {
         this.inputNomRue = text  
     }
-    getInputCP(text){
+    getInputCP(text)
+    {
         this.inputCP = text  
     }
-    getInputVille(text){
+    getInputVille(text)
+    {
         this.inputVille = text  
     }
-    getInputTel (text){
+    getInputTel (text)
+    {
         this.inputTel = text
     }    
     getInputMdp(text)
@@ -256,8 +279,7 @@ class Inscription extends React.Component{
                             rounded
                             title={this.state.title}
                             overlayContainerStyle={{backgroundColor: this.state.avatarColor}}
-                            //showAccessory
-                            onPress={() => this.goToConnexion()}
+                            onPress={() => this.goToProfil()}
                         />
                     }
                     containerStyle={{

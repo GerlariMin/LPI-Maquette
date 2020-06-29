@@ -4,14 +4,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header, Rating, Text } from 'react-native-elements';
 
-//https://docs.expo.io/versions/v37.0.0/sdk/location/
-import * as Location from 'expo-location';
-
-//import AvatarCustom from './avatar'
-//import HeaderCustom from './header';
+//Import classes personnalisées
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
+//constantes utiles
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 const WATER_IMAGE = require('../Images/star.png');
 
@@ -22,16 +19,11 @@ export default class Coiffeur extends React.Component
     constructor(props)
     {
         super(props)
-        console.log("HOME PROPS: "+JSON.stringify(this.props) +" => "+JSON.stringify(this.props.idUser));
-        console.log("HOME PROPS: "+JSON.stringify(this.props) +" ==> "+JSON.stringify(this.props.updateIdUser));
-        this.inputId = ""
-        this.inputMdp = ""
-        /*this.state = 
+        this.state = 
         {
             data:[],
-            IdUser:"",
-            lieu: "en cours de localisation..."
-        }*/        
+            IdUser:""
+        }      
     }
 
     //foncitons Navigator
@@ -45,13 +37,29 @@ export default class Coiffeur extends React.Component
         this.props.navigation.navigate("Accueil");
     }
 
+    goToProfil()
+    {
+      if(this.state.IdUser!="")
+      {
+        this.props.navigation.navigate("Profil", 
+        {
+          IdUser: this.state.IdUser,
+          data: this.state.data
+        });
+      }
+      else
+      {
+        alert("Vous devez être connecté pour accéder à cette page")
+      }
+    }
+
     openNavigator()
     {
         this.props.navigation.openDrawer();
     }
+
     fetchRdv = async()=>
     {
-      console.log("FETCHHOME START");
         const response = await fetch('http://192.168.0.32:4545/rdv',
         {
             method:'POST',
@@ -73,7 +81,6 @@ export default class Coiffeur extends React.Component
           break;
         }
        
-        
     }
 
     render()
@@ -100,7 +107,7 @@ export default class Coiffeur extends React.Component
                       title="ON"
                       overlayContainerStyle={{backgroundColor: "green"}}
                       showAccessory
-                      //onPress={() => this.goToConnexion()}
+                      onPress={() => this.goToProfil()}
                   />
               }
               containerStyle={{

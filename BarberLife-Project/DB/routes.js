@@ -120,6 +120,76 @@ app.post('/inscription', function(req,res)
     }
 })
 
+//modification d'un utilisateur
+app.post('/profil', function(req,res)
+{
+    var id = req.body.id;
+    var mail = req.body.mail;
+    var nom = req.body.nom;
+    var prenom = req.body.prenom;
+    const dateNaiss = req.body.dateNaiss;
+    var numRue = req.body.numRue;
+    var nomRue = req.body.nomRue;
+    var cp = req.body.cp;
+    var ville = req.body.ville;
+    var tel = req.body.tel;
+    var mdp = req.body.mdp;
+    var verifMdp = req.body.verifMdp;
+    var typeProfil = req.body.typeProfil;
+    var idToken = 1;
+    
+    console.log(mail,nom,prenom,dateNaiss,numRue,nomRue,cp,ville,tel,mdp,verifMdp,typeProfil);
+
+    if(mail || nom || prenom || dateNaiss || numRue || nomRue || cp || ville || tel || mdp || verifMdp)
+    {
+        var set = " SET";
+        if(nom)
+        {
+            set += " nom_user = " + nom +","
+        }
+        if(prenom)
+        {
+            set += " prenom_user = " + prenom +","
+        }
+        if(mail)
+        {
+            set += " mail_user = " + mail +","
+        }
+        if(dateNaiss)
+        {
+            set += " dataNaiss_user = "+ dateNaiss+","
+        }
+        if(tel)
+        {
+            set += " numero_user = "+ tel+","
+        }
+        if(numRue && nomRue && ville && cp)
+        {
+            set += " adresse_user = "+ numRue+" "+nomRue+" "+ville+" "+cp+","
+        }
+        if(mdp && verifMdp && mdp == verifMdp)
+        {
+            var hash = bcrypt.hashSync(mdp, salt);
+            set += " password_user = "+hash
+        }
+        
+        // on enlève la dernière virgule
+        set = set.substring(0, set.length - 1); 
+
+        connection.query("UPDATE"+set+" WHERE id_user=?",[id],function(error,rows,fields)
+        {
+            res.send({sucess:1});
+            console.log('inscription');
+        });  
+                    
+    }
+    else
+    {
+        console.log('Aucune modification détectée');
+        res.send({sucess:2});
+    }
+})
+
 //recherche des coiffeurs
 app.post('/searchBarber',function(req, res)
 {

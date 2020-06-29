@@ -3,12 +3,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 
-/**
- * Import pour la localisation 
- * source: https://docs.expo.io/versions/v37.0.0/sdk/location/
- */
-import * as Location from 'expo-location';
-
 //Imports des classes personnalisées
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
@@ -23,9 +17,10 @@ export default class Home extends React.Component
     constructor(props)
     {
         super(props)
-        console.log("PROPS HOME: "+ JSON.stringify(this.props))
+
         this.inputId = ""
         this.inputMdp = ""
+
         this.state = 
         {
             lieu: "en cours de localisation...",
@@ -33,12 +28,34 @@ export default class Home extends React.Component
             avatarColor: "red",
             IdUser: "",
             data: []
-        }     
+        }    
     }
 
     /**
      * FONCTIONS NAVIGATION
      */
+
+    /**
+     * Cas particulier de navigations imbriquées
+     * source: https://reactnavigation.org/docs/nesting-navigators
+     */
+    goToCommand()
+    {
+      if(this.state.IdUser!="")
+      {
+        this.props.navigation.navigate("Commande", {
+          screen: 'Commande',
+          params: { 
+            IdUser: this.state.IdUser,
+            data: this.state.data
+          }
+        });
+      }
+      else
+      {
+        alert("Vous devez être connecté pour accéder à cette page")
+      }
+    }
 
     goToConnexion()
     {
@@ -68,7 +85,7 @@ export default class Home extends React.Component
 
     displayHome()
     {
-      if(typeof this.props.route.params === 'undefined')
+      if((typeof this.props.route.params === 'undefined' || this.state.IdUser == "" || typeof this.state.IdUser === "undefined"))
       {
         return(
           <View>
@@ -94,38 +111,29 @@ export default class Home extends React.Component
       else
       {
         return(
-          <Text>
-            Vous êtes maintenant connecté !
-            Prenez rendez-vous avec le coiffeur de votre choix en 1 clic!
-          </Text>
+          <View>
+
+            <Text>
+              Vous êtes maintenant connecté !
+              Prenez rendez-vous avec le coiffeur de votre choix en 1 clic!
+            </Text>
+
+            <Button
+              onPress={() => this.goToCommand()}
+              title={` Voir les coiffeurs à proximité`}
+              icon=
+              {
+                <Icon
+                    name="arrow-right"
+                    size={15}
+                    color="white"
+                />
+              }
+            />
+
+          </View>
         )
       }
-    }
-
-    /**
-     * FONCTION LOCALISATION
-     * source: https://docs.expo.io/versions/v37.0.0/sdk/location/
-     */
-
-    useEffect()
-    {
-      console.log("START");
-      (async () => {
-        console.log("ASYNC- START");
-        let { status } = await Location.requestPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-        }
-        console.log("ASYNC- STATUS = "+status);
-        let location = await Location.getCurrentPositionAsync({});
-        console.log("Lieu: "+location);
-        this.setLocation(location);
-        this.lieu=location;
-        this.setState({lieu: JSON.stringify(this.lieu)})
-        console.log("this.lieu: "+JSON.stringify(this.lieu)+ " => "+this.state.lieu);
-        console.log("ASYNC- END");
-      })();
-      console.log("END");
     }
 
     render()
@@ -139,7 +147,7 @@ export default class Home extends React.Component
             avatarColor: "green"
           })
         }
-      console.log("PROPS HOME: "+ JSON.stringify(this.props))
+        
       return(
         <ImageBackground source={image} style={styles.image}>
           <Header

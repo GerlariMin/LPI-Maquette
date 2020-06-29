@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
-import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
-// Sert pour mettre la ligne de délimitation
+
+// Imports utiles de divers librairies
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input,} from 'react-native-elements';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
 
+// Imports des objets personnalisés
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
+// constantes utiles 
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
 
 // Vue afficher pour la page de connexion
-class Connexion extends React.Component
+export default class Connexion extends React.Component
 {
   
     //Constructeur
@@ -25,8 +27,8 @@ class Connexion extends React.Component
         {
           title:"OFF",
           avatarColor: "red",
-          data: this.props.data,
-          IdUser: this.props.IdUser
+          data: [],
+          IdUser: ""
         }
     }
 
@@ -38,7 +40,6 @@ class Connexion extends React.Component
 
     goToHome()
     {
-      console.log("STATE CONNEXION: "+JSON.stringify(this.state.IdUser));
       this.props.navigation.navigate("Accueil", {
         IdUser: this.state.IdUser,
         data: this.state.data
@@ -47,7 +48,7 @@ class Connexion extends React.Component
 
     goToProfil()
     {
-      if(this.state.IdUser=!"")
+      if(this.state.IdUser!="")
       {
         this.props.navigation.navigate("Profil", {
           test: "test",
@@ -102,13 +103,7 @@ class Connexion extends React.Component
         switch(users.sucess)
         {
             case 1:
-              this.setState(
-                {
-                  IdUser:users.data // Donne au state l'id de l'utilisateur récupérer avec la connexion pour le réutilisser dans home
-                }
-              ) 
               this.setState({IdUser: users.IdUser, data: users.data,title: "ON", avatarColor: "green"});
-              console.log("USERS000: "+JSON.stringify(users));
               this.goToHome();
               break;
             case 2:
@@ -119,38 +114,14 @@ class Connexion extends React.Component
               break;
         }
     } 
-
-    fetchHome = async()=>
-    {
-      console.log("FETCHHOME START");
-        const response = await fetch('http://192.168.0.32:4545/home',
-        {
-            method:'POST',
-            headers:
-            {
-                'Content-Type':'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: this.state.IdUser
-            }),
-        })
-        const users = await response.json();
-        console.log("user: "+JSON.stringify(users));
-        this.setState({user: users});
-    }
+    
     getConnexion()
     {
         this.fetchConnexion(); 
     }
 
-    showSTATE()
-    {
-      console.log("CONNEXION PROPS: "+JSON.stringify(this.props));
-    }
-
     render()
     {
-      this.showSTATE();
         return(
             <ImageBackground source={image} style={styles.image}>
             <Header
@@ -299,6 +270,4 @@ const styles = StyleSheet.create(
     resizeMode: "cover",
     justifyContent: "center"
   }
-    });
-
-export default Connexion
+});

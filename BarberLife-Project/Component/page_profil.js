@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Card, Divider, Header, Input } from 'react-native-elements';
 
-import HeaderCustom from './header';
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
 
@@ -23,8 +22,17 @@ export default class Profil extends React.Component
     constructor(props)
     {
         super(props)
-        this.inputId = ""
+        this.inputUsername = ""
+        this.inputNom = ""
+        this.inputPrenom = ""
+        this.inputDateNaiss = ""
+        this.inputNumRue = ""
+        this.inputNomRue = ""
+        this.inputCP = ""
+        this.inputVille = ""
+        this.inputTel = ""
         this.inputMdp = ""
+        this.inputVerifMdp = ""
         this.state = 
         {
             //OFF et red si pas connecté, ON et green sinon
@@ -32,10 +40,9 @@ export default class Profil extends React.Component
             avatarColor: "red",
             imagePicker: 'https://img.icons8.com/color/1600/avatar.png',
             data:[],
-            IdUser: "t",
+            IdUser: "",
             count: 0
         }
-        console.log("PROFIL PROPS: "+ JSON.stringify(this.props));
     }
 
     useEffect()
@@ -56,15 +63,13 @@ export default class Profil extends React.Component
     pickImage = async () => 
     {
         let result = await ImagePicker.launchImageLibraryAsync(
-        {
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        }
+            {
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            }
         );
-
-        console.log("RESULT: "+JSON.stringify(result));
 
         if (!result.cancelled) 
         {
@@ -88,16 +93,113 @@ export default class Profil extends React.Component
         this.props.navigation.openDrawer();
     }
 
+    /**
+     * RECUPERATION CHAMPS FORMULAIRE 
+     */
+
+    getInputUsername(text)
+    {
+        this.inputUsername = text      
+    }
+    getInputNom(text)
+    {
+        this.inputNom = text  
+    }
+    getInputPrenom(text)
+    {
+        this.inputPrenom = text  
+    }
+    getInputDateNaiss(text)
+    {
+        this.inputDateNaiss = text  
+    }
+    getInputNumRue(text)
+    {
+        this.inputNumRue = text  
+    }
+    getInputNomRue(text)
+    {
+        this.inputNomRue = text  
+    }
+    getInputCP(text)
+    {
+        this.inputCP = text  
+    }
+    getInputVille(text)
+    {
+        this.inputVille = text  
+    }
+    getInputTel (text)
+    {
+        this.inputTel = text
+    }    
+    getInputMdp(text)
+    {
+        this.inputMdp = text  
+    }
+    getInputVerifMdp(text){
+        this.inputVerifMdp = text  
+    }
+
+    /**
+     * FONCTION BDD
+     */
+
+    fetProfil = async() =>
+    {
+        const response = await fetch('http://192.168.0.32:4545/profil',{
+            method:'POST',
+            headers:
+            {
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify({
+                id: this.props.route.params.IdUser,
+                mail: this.inputUsername,
+                nom: this.inputNom,
+                prenom: this.inputPrenom,
+                dateNaiss: this.inputDateNaiss,
+                numRue : this.inputNumRue,
+                nomRue : this.inputNomRue,
+                cp : this.inputCP,
+                ville : this.inputVille,
+                tel : this.inputTel,
+                mdp : this.inputMdp,
+                verifMdp : this.inputVerifMdp,
+                typeProfil : this.state.typeUser,
+
+            }),
+        })
+        const update = await response.json();
+        switch(update.sucess)
+        {
+            case 1:
+                alert("Votre compte viens d'être actualisé.")
+                this.goToConnexion();
+            break;
+            case 2:
+                alert("Aucun champ complété!");
+            break;
+        }
+    }
+
     render()
     {
-        /*if(typeof this.props.route.params !== 'undefined' && this.state.IdUser=="")
+        if(typeof this.props.route.params !== 'undefined' && this.state.IdUser=="")
         {
           this.setState({
             IdUser: this.props.route.params.IdUser,
             data: this.props.route.params.data,
             title: "ON",
             avatarColor: "green"
-          })*/
+          })
+        }
+        if(this.state.IdUser=="" && typeof this.props.route.params === 'undefined')
+        {
+            alert("Vous devez être connecté(e) pour accéder à cette page!")
+            this.goToHome();
+        }
+        
         return(
           <ImageBackground source={image} style={styles.image}>
             <Header
@@ -117,7 +219,8 @@ export default class Profil extends React.Component
                         <Avatar
                             rounded
                             title="ON"
-                            overlayContainerStyle={{backgroundColor: "green"}}
+                            overlayContainerStyle={{backgroundColor: 'blue'}}
+                            source={{uri: this.state.imagePicker}}
                             showAccessory
                             //onPress={() => this.goToConnexion()}
                         />
@@ -155,25 +258,7 @@ export default class Profil extends React.Component
             <View>
 
             <Input
-                label="Nom d'utilisateur"
-                labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
-                // placeholder={this.state.IdUser} fait planter l'appli 
-                // le but est de pouvoir affichier la valeur stockée en base pour que l'utilisateur voit ce qu'il va modifier
-                placeholder="Saisissez votre nom d'utilisateur (login)"
-                leftIcon=
-                {
-                    <Icon
-                        name='user-circle-o'
-                        size={24}
-                        color='black'
-                    />
-                }
-                errorMessage='ENTER A VALID LOGIN'
-                errorStyle={{ color: 'red', fontWeight: 'bold' }}
-            />
-
-            <Input
-                label='Mail'
+                label={"Mail (" + this.props.route.params.data.mail_user+")"}
                 labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
                 placeholder="Saisissez votre adresse e-mail"
                 leftIcon=
@@ -186,10 +271,11 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID MAIL ADDRESS'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputUsername(text)}
             />
 
             <Input
-                label='Nom'
+                label={"Nom (" + this.props.route.params.data.nom_user +")"}
                 labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
                 placeholder="Saisissez votre nom"
                 leftIcon=
@@ -202,10 +288,11 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID MAIL ADDRESS'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputNom(text)}
             />
 
             <Input
-                label='Prénom'
+                label={"Prénom (" + this.props.route.params.data.prenom_user+")"}
                 labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
                 placeholder="Saisissez votre prénom"
                 leftIcon=
@@ -218,10 +305,11 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID MAIL ADDRESS'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputPrenom(text)}
             />
 
             <Input
-                label='Date de naissance'
+                label={"Date de naissance (" + this.state.mail_user +")"}
                 labelStyle={{ fontWeight: 'bold', fontStyle: 'italic' }}
                 placeholder="Saisissez votre date de naissance"
                 leftIcon=
@@ -234,6 +322,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID DATE OF BIRTH'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputDateNaiss(text)}
             />
 
             <Divider/>
@@ -252,6 +341,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID STREET NUMBER'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputNumRue(text)}
             />
 
             <Input
@@ -268,6 +358,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID STREET NAME'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputNomRue(text)}
             />
 
             <Input
@@ -284,6 +375,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID ZIPCODE'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputCP(text)}
             />
 
             <Input
@@ -300,6 +392,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID CITY'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputVille(text)}
             />
 
             <Divider/>
@@ -319,6 +412,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER A VALID PASSWORD'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputMdp(text)}
             />
 
             <Input
@@ -336,6 +430,7 @@ export default class Profil extends React.Component
                 }
                 errorMessage='ENTER THE SAME PASSWORD'
                 errorStyle={{ color: 'red', fontWeight: 'bold' }}
+                onChangeText={(text) => this.getInputVerifMdp(text)}
             />
 
             </View>
@@ -366,12 +461,6 @@ export default class Profil extends React.Component
           <FooterCustom/>
       </ImageBackground>
         )
-    /*}
-    else
-    {
-        alert("Vous devez être connecté(e) pour accéder à cette page!")
-        return null
-    }*/
         
     }
 }

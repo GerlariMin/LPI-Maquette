@@ -1,26 +1,24 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import {TextInput,TouchableOpacity,SafeAreaView} from 'react-native'
-// Sert pour mettre la ligne de délimitation
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input,} from 'react-native-elements';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { Avatar, Button, Card, Divider, Header, ListItem } from 'react-native-elements';
 
-import HeaderCustom from './header';
+// Import des librairies utiles
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { FlatList } from 'react-native-gesture-handler';
+import { ImageBackground, StyleSheet, View } from 'react-native';
+import { Avatar, Button, Card, Divider, Header } from 'react-native-elements';
+
+//Imports des classes personnalisées
 import FooterCustom from './footer';
 import SearchBarCustom from './searchbar';
-import Coiffeur from './page_coiffeur';
 import CoiffeurItems from './coiffeurItems'
-//https://docs.expo.io/versions/v37.0.0/sdk/imagepicker/
-import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import { FlatList } from 'react-native-gesture-handler';
 
+/**
+ * Import pour la localisation 
+ * source: https://docs.expo.io/versions/v37.0.0/sdk/location/
+ */
+import * as Location from 'expo-location';
+
+//costantes utiles
 const image = { uri: "https://images.hdqwalls.com/download/apple-pro-display-xdr-5k-jh-1920x1080.jpg" };
-
-const list = [{"id_user":2,"id_tk":1,"typeProfil_user":0,"nom_user":"Coiffeur","prenom_user":"tailleur","dataNaiss_user":"20/10/1999","mail_user":"coiffeur.tailleur@pro.com","sexe_user":"homme","numero_user":"0605050505","adress_user":"adresse2","password_user":"coiffeur"},{"id_user":3,"id_tk":1,"typeProfil_user":0,"nom_user":"Professionnel","prenom_user":"raseur","dataNaiss_user":"18/02/1980","mail_user":"proraseur@gmail.com","sexe_user":"homme","numero_user":"0143752077","adress_user":"adresse inconnue","password_user":"coiffeur"}]; 
-
 
 // Vue afficher pour la page de commande
 export default class Commande extends React.Component
@@ -30,22 +28,46 @@ export default class Commande extends React.Component
     constructor(props)
     {
         super(props)
-        console.log("COMMANDE PROPS: "+ JSON.stringify(this.props));
         this.inputId = ""
         this.inputMdp = ""
         this.state = 
         {
             coiffeurs: "",
-            //OFF et red si pas connecté, ON et green sinon
             title:"OFF",
             avatarColor: "red",
             imagePicker: 'https://img.icons8.com/color/1600/avatar.png',
             data:[],
-            IdUser: "t"
+            IdUser: ""
         }
     }
 
+    /**
+     * FONCTION LOCALISATION
+     * source: https://docs.expo.io/versions/v37.0.0/sdk/location/
+     */
+
+    useEffect()
+    {
+      (async () => 
+      {
+        let { status } = await Location.requestPermissionsAsync();
+        if (status !== 'granted') 
+        {
+          setErrorMsg('Permission to access location was denied');
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        this.setLocation(location);
+        this.lieu=location;
+        this.setState({lieu: JSON.stringify(this.lieu)})
+      })();
+    }
+
     //fonctions du navigator (pour changer de page)
+    gotToCoiffeur(id_user)
+    {
+        this.props.navigation.navigate("Coiffeur", {id_user});
+    }
+
     goToInscription()
     {
       this.props.navigation.navigate("Inscription");
@@ -56,9 +78,20 @@ export default class Commande extends React.Component
       this.props.navigation.navigate("Accueil");
     }
 
-    gotToCoiffeur(id_user)
+    goToProfil()
     {
-        this.props.navigation.navigate("Coiffeur", {id_user});
+      if(this.state.IdUser!="")
+      {
+        this.props.navigation.navigate("Profil", {
+          test: "test",
+          IdUser: this.state.IdUser,
+          data: this.state.data
+        });
+      }
+      else
+      {
+        alert("Vous devez être connecté pour accéder à cette page")
+      }
     }
 
     openNavigator()
@@ -82,17 +115,6 @@ export default class Commande extends React.Component
         this.goToHome();
     }
 
-    componentWillMount()
-    {
-        this.fetchConnexion(); 
-    }
-
-    //pendant que la page charge on récupère les données et on modifie le state pour les inputs
-    componentWillMount()
-    {
-        //this.fetchAllBarber();
-    }
-
     fetchAllBarber = async()=>
     {
         const response = await fetch('http://192.168.0.32:4545/searchBarber',
@@ -104,24 +126,24 @@ export default class Commande extends React.Component
             }
         })
         const barbers = await response.json();
-        console.log("BARBERS: "+JSON.stringify(barbers));
         this.setState({coiffeurs: barbers})
     }
 
-    displayCoiffeur(){
-        if(this.state.coiffeurs != null){
+    displayCoiffeur()
+    {
+        if(this.state.coiffeurs != null)
+        {
             return(
                 <FlatList
-
-                data={this.state.coiffeurs}
-                keyExtractor= {(item) => item.id_user.toString()}
-                renderItem= {({item}) => (
+                    data={this.state.coiffeurs}
+                    keyExtractor= {(item) => item.id_user.toString()}
+                    renderItem= {({item}) => (
                     <CoiffeurItems
                         user = {item}
                         navigation = {this.props.navigation}
                     />
-                )}
-            />
+                    )}
+                />
             )
         }
     }
@@ -136,6 +158,12 @@ export default class Commande extends React.Component
             title: "ON",
             avatarColor: "green"
           })
+        }
+        if(this.state.IdUser=="" && typeof this.props.route.params === 'undefined')
+        {
+            alert("Vous devez être connecté(e) pour accéder à cette page!")
+            this.goToHome();
+        }
         return(
           <ImageBackground source={image} style={styles.image}>
             <Header
@@ -157,7 +185,7 @@ export default class Commande extends React.Component
                         title="ON"
                         overlayContainerStyle={{backgroundColor: "green"}}
                         showAccessory
-                        //onPress={() => this.goToConnexion()}
+                        onPress={() => this.goToProfil()}
                     />
                 }
                 containerStyle={{
@@ -217,12 +245,6 @@ export default class Commande extends React.Component
             <FooterCustom/>
         </ImageBackground>
         )
-    }
-    else
-    {
-        alert("Vous devez être connecté(e) pour accéder à cette page!")
-        return null
-    }
     }
     
 }
