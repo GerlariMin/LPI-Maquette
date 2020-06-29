@@ -213,7 +213,7 @@ app.post('/searchBarber',function(req, res)
 app.post('/rdv',function(req, res)
 {
     var idCoiffeur = req.body.idUser;
-    var idUser = 8;
+    var idUser = 4;
     var date1 = Date.now();
     var date2 = Date.now()+ 1*3600*1000;
     var dateDeb = new Date(date1),
@@ -228,10 +228,12 @@ app.post('/rdv',function(req, res)
         if(!error)
         {
             res.send({sucess:1});
+            console.log("réussis!")
         }
         else
         {
             res.send({sucess:2});
+            console.log("échec! " + idCoiffeur)
         }
         
        

@@ -21,6 +21,7 @@ export default class CoiffeurItem extends React.Component
 
     render()
     {
+        console.log("COIFFEURITEMS: "+JSON.stringify(this.props))
       
         // props donner par le component search qui contient les films pour alimenter le template filmItem
         const user = this.props.user

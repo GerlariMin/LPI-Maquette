@@ -67,8 +67,9 @@ export default class Coiffeur extends React.Component
             {
                 'Content-Type':'application/json',
             },
-            body: JSON.stringify({
-                idUser: this.props.route.params.id_user
+            body: JSON.stringify(
+              {
+                idUser: this.props.route.params.user.id_user
             }),
         })
         const users = await response.json();
@@ -85,7 +86,16 @@ export default class Coiffeur extends React.Component
 
     render()
     {
-      
+      console.log("PROPS: "+JSON.stringify(this.props))
+        if(typeof this.props.route.params !== 'undefined' && this.state.IdUser=="")
+        {
+          this.setState({
+            IdUser: this.props.route.params.IdUser,
+            data: this.props.route.params.data,
+            title: "ON",
+            avatarColor: "green"
+          })
+        }
         return(
           <ImageBackground source={image} style={styles.image}>
           <Header
